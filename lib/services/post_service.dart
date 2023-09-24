@@ -4,7 +4,6 @@ import 'package:fakestagram/providers/providers.dart';
 import 'package:fakestagram/services/dio_client.dart';
 import 'package:fakestagram/models/models.dart';
 import 'package:fakestagram/views/home/home_page.dart';
-import 'package:fakestagram/views/home/profile_tab/profile_tab_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,11 +19,12 @@ class PostService {
     postsProvider.setLoader(true);
     try {
       //58977
-      final Response dioResponse =
-          await apiClient.get("/posts", options: getAuthHeaders(userProvider));
-      final posts = PostList.fromJson(dioResponse.data["posts"]);
+      final Response dioResponse = await apiClient.get("/posts",
+          queryParameters: {"id": userProvider.user?.id},
+          options: getAuthHeaders(userProvider));
+      final posts = PostList.fromJson(dioResponse.data);
 
-      postsProvider.setPosts(posts);
+      postsProvider.setPosts(posts.posts);
       postsProvider.setLoader(false);
     } on DioException catch (dioError) {
       postsProvider.setLoader(false);

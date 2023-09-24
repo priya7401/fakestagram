@@ -1,4 +1,5 @@
 import 'package:fakestagram/providers/providers.dart';
+import 'package:fakestagram/services/post_service.dart';
 import 'package:fakestagram/utils/app_constants.dart';
 import 'package:fakestagram/views/home/add_post_tab/add_post.dart';
 import 'package:fakestagram/views/home/home_tab/home_tab_page.dart';
@@ -105,6 +106,9 @@ class _HomePageState extends State<HomePage> {
           ],
           onTap: (int page) {
             pageController.jumpToPage(page);
+            if (page == 4) {
+              PostService().getPosts(context);
+            }
           },
         ),
       );
