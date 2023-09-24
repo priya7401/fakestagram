@@ -1,0 +1,35 @@
+import 'package:json_annotation/json_annotation.dart';
+import 'package:fakestagram/models/models.dart';
+
+part 'post.g.dart';
+
+@JsonSerializable(explicitToJson: true)
+class Post {
+  Post({
+    this.id,
+    this.likes,
+    this.description,
+    this.userId,
+    this.datePublished,
+    this.attachment
+  });
+
+  @JsonKey(name: "_id")
+  String? id;
+
+  int? likes;
+
+  String? description;
+
+  @JsonKey(name: "user_id")
+  String? userId;
+
+  @JsonKey(name: "created_at")
+  String? datePublished;
+
+  Attachment? attachment;
+
+  factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PostToJson(this);
+}
