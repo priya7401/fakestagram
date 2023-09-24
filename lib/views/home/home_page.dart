@@ -26,14 +26,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: PageView(
-        children: [
-          // const Text('feed screen'),
-          HomeTabPage(),
-          const Text('search screen'),
-          const Text('add post screen'),
-          const Text('reels screen'),
-          ProfileTabPage()
-        ],
         physics: const NeverScrollableScrollPhysics(),
         controller: pageController,
         onPageChanged: (int page) {
@@ -41,6 +33,14 @@ class _HomePageState extends State<HomePage> {
             _page = page;
           });
         },
+        children: const [
+          // const Text('feed screen'),
+          HomeTabPage(),
+          Text('search screen'),
+          Text('add post screen'),
+          Text('reels screen'),
+          ProfileTabPage()
+        ],
       ),
       bottomNavigationBar: CupertinoTabBar(
         backgroundColor: Colors.white,

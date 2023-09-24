@@ -1,6 +1,6 @@
 import 'package:email_validator/email_validator.dart';
-import 'package:fakestagram/providers/user_provider.dart';
-import 'package:fakestagram/services/auth_service.dart';
+import 'package:fakestagram/providers/providers.dart';
+import 'package:fakestagram/services/services.dart';
 import 'package:fakestagram/utils/global_widgets.dart';
 import 'package:fakestagram/views/auth/sign_up.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +15,8 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
   final formKey = GlobalKey<FormState>();
-  final email = TextEditingController(text: "test@gmail.com");
-  final password = TextEditingController(text: "password@123");
+  final email = TextEditingController();
+  final password = TextEditingController();
 
   @override
   void dispose() {
@@ -28,7 +28,8 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     return Consumer<UserProvider>(builder: (context, userProvider, child) {
-      return SafeArea(child: Scaffold(
+      return SafeArea(
+          child: Scaffold(
         resizeToAvoidBottomInset: false,
         body: Padding(
           padding: const EdgeInsets.all(15.0),
@@ -113,11 +114,6 @@ class _SignInState extends State<SignIn> {
                   }
                 },
                 child: Container(
-                  child: userProvider.isLoading
-                      ? Center(
-                          child: progressIndicator(),
-                        )
-                      : const Text('Sign In'),
                   width: double.infinity,
                   alignment: Alignment.center,
                   padding: const EdgeInsets.symmetric(vertical: 12),
@@ -129,6 +125,11 @@ class _SignInState extends State<SignIn> {
                     ),
                     color: Colors.pink[100],
                   ),
+                  child: userProvider.isLoading
+                      ? Center(
+                          child: progressIndicator(),
+                        )
+                      : const Text('Sign In'),
                 ),
               ),
               const SizedBox(
@@ -138,21 +139,22 @@ class _SignInState extends State<SignIn> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    child: const Text("Don't have an account?"),
                     padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: const Text("Don't have an account?"),
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => SignUp()));
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => SignUp()));
                     },
                     child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
                       child: const Text(
                         " Sign Up!",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      padding: const EdgeInsets.symmetric(vertical: 8),
                     ),
                   ),
                 ],

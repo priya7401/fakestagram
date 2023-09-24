@@ -1,8 +1,8 @@
 import 'package:fakestagram/providers/app_provider.dart';
 import 'package:fakestagram/providers/user_provider.dart';
 import 'package:fakestagram/utils/app_constants.dart';
-import 'package:fakestagram/views/auth/sign_in.dart';
 import 'package:fakestagram/views/home/home_page.dart';
+import 'package:fakestagram/views/init_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -40,7 +40,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primaryColor: AppConstants.primaryColor,
       ),
-      home: const HomePage(),
+      home: const InitPage(),
       debugShowCheckedModeBanner: false,
     );
   }

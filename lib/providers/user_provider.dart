@@ -4,9 +4,11 @@ import 'package:flutter/foundation.dart';
 class UserProvider extends ChangeNotifier {
   User? _user;
   bool? _isLoading = false;
+  String? _token;
 
-  User get getUser => _user ?? User();
+  User? get user => _user;
   bool get isLoading => _isLoading ?? false;
+  String? get token => _token;
 
   void setLoader(bool? value) {
     _isLoading = value;
@@ -15,6 +17,11 @@ class UserProvider extends ChangeNotifier {
 
   void setUser(data) {
     _user = data;
+    notifyListeners();
+  }
+
+  void setToken(String? token) {
+    _token = token;
     notifyListeners();
   }
 }
