@@ -1,11 +1,15 @@
+import 'package:fakestagram/providers/providers.dart';
 import 'package:fakestagram/utils/app_constants.dart';
+import 'package:fakestagram/views/home/add_post_tab/add_post.dart';
 import 'package:fakestagram/views/home/home_tab/home_tab_page.dart';
 import 'package:fakestagram/views/home/profile_tab/profile_tab_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final int page;
+  const HomePage({Key? key, this.page = 0}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -13,8 +17,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _page = 0;
+  PageController pageController = PageController();
 
-  final PageController pageController = PageController();
+  @override
+  void initState() {
+    _page = widget.page;
+    pageController = PageController(initialPage: widget.page);
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -24,75 +34,80 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: PageView(
-        physics: const NeverScrollableScrollPhysics(),
-        controller: pageController,
-        onPageChanged: (int page) {
-          setState(() {
-            _page = page;
-          });
-        },
-        children: const [
-          // const Text('feed screen'),
-          HomeTabPage(),
-          Text('search screen'),
-          Text('add post screen'),
-          Text('reels screen'),
-          ProfileTabPage()
-        ],
-      ),
-      bottomNavigationBar: CupertinoTabBar(
-        backgroundColor: Colors.white,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home,
-              color: _page == 0 ? AppConstants.primaryColor : Colors.grey[500],
+    return Consumer<AppProvider>(builder: (context, appProvider, child) {
+      return Scaffold(
+        body: PageView(
+          physics: const NeverScrollableScrollPhysics(),
+          controller: pageController,
+          onPageChanged: (int page) {
+            appProvider.setPrevTabPage(_page);
+            setState(() {
+              _page = page;
+            });
+          },
+          children: const [
+            // const Text('feed screen'),
+            HomeTabPage(),
+            Text('search screen'),
+            AddPost(),
+            Text('reels screen'),
+            ProfileTabPage()
+          ],
+        ),
+        bottomNavigationBar: CupertinoTabBar(
+          backgroundColor: Colors.white,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.home,
+                color:
+                    _page == 0 ? AppConstants.primaryColor : Colors.grey[500],
+              ),
+              label: '',
+              backgroundColor: AppConstants.primaryColor,
             ),
-            label: '',
-            backgroundColor: AppConstants.primaryColor,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.search,
-              color: _page == 1 ? AppConstants.primaryColor : Colors.grey[500],
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.search,
+                color:
+                    _page == 1 ? AppConstants.primaryColor : Colors.grey[500],
+              ),
+              label: '',
+              backgroundColor: AppConstants.primaryColor,
             ),
-            label: '',
-            backgroundColor: AppConstants.primaryColor,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.add_circle,
-              color: _page == 2 ? AppConstants.primaryColor : Colors.grey[500],
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.add_circle,
+                color:
+                    _page == 2 ? AppConstants.primaryColor : Colors.grey[500],
+              ),
+              label: '',
+              backgroundColor: AppConstants.primaryColor,
             ),
-            label: '',
-            backgroundColor: AppConstants.primaryColor,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.slow_motion_video_sharp,
-              color: _page == 3 ? AppConstants.primaryColor : Colors.grey[500],
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.slow_motion_video_sharp,
+                color:
+                    _page == 3 ? AppConstants.primaryColor : Colors.grey[500],
+              ),
+              label: '',
+              backgroundColor: AppConstants.primaryColor,
             ),
-            label: '',
-            backgroundColor: AppConstants.primaryColor,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.person,
-              color: _page == 4 ? AppConstants.primaryColor : Colors.grey[500],
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.person,
+                color:
+                    _page == 4 ? AppConstants.primaryColor : Colors.grey[500],
+              ),
+              label: '',
+              backgroundColor: AppConstants.primaryColor,
             ),
-            label: '',
-            backgroundColor: AppConstants.primaryColor,
-          ),
-        ],
-        onTap: (int page) {
-          pageController.jumpToPage(page);
-          if(page == 3) {
-
-          }
-        },
-      ),
-    );
+          ],
+          onTap: (int page) {
+            pageController.jumpToPage(page);
+          },
+        ),
+      );
+    });
   }
 }

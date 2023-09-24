@@ -1,8 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:fakestagram/services/dio_client.dart';
 import 'package:fakestagram/models/models.dart';
-import 'package:fakestagram/providers/app_provider.dart';
-import 'package:fakestagram/providers/user_provider.dart';
+import 'package:fakestagram/providers/providers.dart';
 import 'package:fakestagram/views/home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

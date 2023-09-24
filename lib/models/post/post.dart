@@ -5,14 +5,13 @@ part 'post.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Post {
-  Post({
-    this.id,
-    this.likes,
-    this.description,
-    this.userId,
-    this.datePublished,
-    this.attachment
-  });
+  Post(
+      {this.id,
+      this.likes,
+      this.description,
+      this.userId,
+      this.datePublished,
+      this.attachment});
 
   @JsonKey(name: "_id")
   String? id;
@@ -32,4 +31,16 @@ class Post {
   factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json);
 
   Map<String, dynamic> toJson() => _$PostToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class PostList {
+  PostList({this.posts});
+
+  List<Post>? posts;
+
+  factory PostList.fromJson(Map<String, dynamic> json) =>
+      _$PostListFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PostListToJson(this);
 }

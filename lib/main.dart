@@ -1,7 +1,5 @@
-import 'package:fakestagram/providers/app_provider.dart';
-import 'package:fakestagram/providers/user_provider.dart';
+import 'package:fakestagram/providers/providers.dart';
 import 'package:fakestagram/utils/app_constants.dart';
-import 'package:fakestagram/views/home/home_page.dart';
 import 'package:fakestagram/views/init_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +11,7 @@ void main() {
     providers: [
       ChangeNotifierProvider(create: (context) => UserProvider()),
       ChangeNotifierProvider(create: (context) => AppProvider()),
+      ChangeNotifierProvider(create: (context) => PostsProvider()),
     ],
     child: const MyApp(),
   ));
@@ -38,8 +37,8 @@ class _MyAppState extends State<MyApp> {
           Provider.of<AppProvider>(context, listen: false).globalNavigator,
       title: 'Fakestagram',
       theme: ThemeData(
-        primaryColor: AppConstants.primaryColor,
-      ),
+          primaryColor: AppConstants.primaryColor,
+          primarySwatch: swatchify(Colors.pink, 100)),
       home: const InitPage(),
       debugShowCheckedModeBanner: false,
     );
