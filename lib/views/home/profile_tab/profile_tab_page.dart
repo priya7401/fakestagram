@@ -3,6 +3,7 @@ import 'package:fakestagram/providers/posts_provider.dart';
 import 'package:fakestagram/providers/user_provider.dart';
 import 'package:fakestagram/views/home/home_page.dart';
 import 'package:fakestagram/views/home/home_tab/home_tab_page.dart';
+import 'package:fakestagram/views/home/profile_tab/post_detail_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -54,9 +55,9 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                     backgroundImage: NetworkImage(profilePicUrl),
                   ),
                   Column(
-                    children: const [
+                    children: [
                       Text(
-                        '3',
+                        postProvider.posts?.length.toString() ?? "0",
                         style: TextStyle(
                             fontWeight: FontWeight.w600, fontSize: 16),
                       ),
@@ -112,10 +113,18 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                       shrinkWrap: true,
                       children: postProvider.posts?.map((Post post) {
                             return post.attachment?.s3Url != null
-                                ? Image(
-                                    image: NetworkImage(
-                                        post.attachment?.s3Url ?? ""),
-                                    fit: BoxFit.cover,
+                                ? InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ProfilePostsDetailView()));
+                                    },
+                                    child: Image(
+                                      image: NetworkImage(
+                                          post.attachment?.s3Url ?? ""),
+                                      fit: BoxFit.cover,
+                                    ),
                                   )
                                 : Text('Image not available');
                           }).toList() ??
@@ -131,3 +140,6 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
 
 String bio =
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in quam quam. ";
+
+String profilePicUrl =
+    "https://media.istockphoto.com/id/909772478/photo/brown-teddy-bear-isolated-in-front-of-a-white-background.jpg?s=612x612&w=0&k=20&c=F4252bOrMfRTB8kWm2oM2jlb9JXY08tKCaO5G_ms1Uw=";

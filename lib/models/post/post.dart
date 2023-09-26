@@ -10,8 +10,9 @@ class Post {
       this.likes,
       this.description,
       this.userId,
-      this.datePublished,
-      this.attachment});
+      this.createdAt,
+      this.attachment,
+      this.commentCount});
 
   @JsonKey(name: "_id")
   String? id;
@@ -24,9 +25,11 @@ class Post {
   String? userId;
 
   @JsonKey(name: "created_at")
-  String? datePublished;
+  String? createdAt;
 
   Attachment? attachment;
+
+  int? commentCount;
 
   factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json);
 

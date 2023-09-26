@@ -141,4 +141,39 @@ class PostService {
       debugPrint("=========== $err ==============");
     }
   }
+
+  void deletePost(String postId, BuildContext context) async {
+    final PostsProvider postsProvider =
+        Provider.of<PostsProvider>(context, listen: false);
+    final UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
+
+    postsProvider.setLoader(true);
+    try {
+      //58977
+      await apiClient.delete("/posts",
+          queryParameters: {
+            "user_id": userProvider.user?.id,
+            "post_id": postId
+          },
+          options: getAuthHeaders(userProvider));
+
+      getPosts(context);
+      postsProvider.setLoader(false);
+    } on DioException catch (dioError) {
+      postsProvider.setLoader(false);
+      final Response? errorResponse = dioError.response;
+      debugPrint("=========== delete post error block ==============");
+      debugPrint(
+          "=========== statusCode: ${errorResponse?.statusCode} ==============");
+      debugPrint("=========== error: ${errorResponse?.data} ==============");
+
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(errorResponse?.data["message"])));
+    } catch (err) {
+      postsProvider.setLoader(false);
+      debugPrint("=========== delete post catch block ==============");
+      debugPrint("=========== $err ==============");
+    }
+  }
 }
