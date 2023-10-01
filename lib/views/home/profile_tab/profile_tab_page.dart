@@ -2,7 +2,6 @@ import 'package:fakestagram/models/post/post.dart';
 import 'package:fakestagram/providers/posts_provider.dart';
 import 'package:fakestagram/providers/user_provider.dart';
 import 'package:fakestagram/views/home/home_page.dart';
-import 'package:fakestagram/views/home/home_tab/home_tab_page.dart';
 import 'package:fakestagram/views/home/profile_tab/post_detail_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

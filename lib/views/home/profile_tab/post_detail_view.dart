@@ -61,16 +61,16 @@ class ProfilePostsDetailView extends StatelessWidget {
                                               children: [
                                                 Padding(
                                                   padding: const EdgeInsets
-                                                          .symmetric(
+                                                      .symmetric(
                                                       horizontal: 20,
                                                       vertical: 20),
                                                   child: TextButton(
                                                       onPressed: () {
                                                         PostService()
-                                                            .deletePost(
-                                                                post.id
-                                                                    .toString(),
-                                                                context);
+                                                            .deletePost({
+                                                          "post_id":
+                                                              post.id.toString()
+                                                        }, context);
                                                         Navigator.of(context)
                                                             .pop();
                                                       },

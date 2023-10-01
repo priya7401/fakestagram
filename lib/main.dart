@@ -37,8 +37,17 @@ class _MyAppState extends State<MyApp> {
           Provider.of<AppProvider>(context, listen: false).globalNavigator,
       title: 'Fakestagram',
       theme: ThemeData(
-          primaryColor: AppConstants.primaryColor,
-          primarySwatch: swatchify(Colors.pink, 100)),
+        primaryColor: AppConstants.primaryColor,
+        // primarySwatch: swatchify(Colors.pink, 300),
+        appBarTheme: AppBarTheme(
+          color: AppConstants.primaryColor,
+        ),
+        buttonTheme: ButtonThemeData(buttonColor: AppConstants.primaryColor),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+              backgroundColor: AppConstants.primaryColor),
+        ),
+      ),
       home: const InitPage(),
       debugShowCheckedModeBanner: false,
     );

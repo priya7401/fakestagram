@@ -13,15 +13,12 @@ class PostService {
   void getPosts(BuildContext context) async {
     final PostsProvider postsProvider =
         Provider.of<PostsProvider>(context, listen: false);
-    final UserProvider userProvider =
-        Provider.of<UserProvider>(context, listen: false);
 
     postsProvider.setLoader(true);
     try {
       //58977
-      final Response dioResponse = await apiClient.get("/posts",
-          queryParameters: {"id": userProvider.user?.id},
-          options: getAuthHeaders(userProvider));
+      final Response dioResponse =
+          await apiClient.get("/posts", options: getAuthHeaders(context));
       final posts = PostList.fromJson(dioResponse.data);
 
       postsProvider.setPosts(posts.posts);
@@ -48,8 +45,6 @@ class PostService {
       {String? description}) async {
     final PostsProvider postsProvider =
         Provider.of<PostsProvider>(context, listen: false);
-    final UserProvider userProvider =
-        Provider.of<UserProvider>(context, listen: false);
 
     postsProvider.setLoader(true);
     try {
@@ -57,13 +52,13 @@ class PostService {
       final Response dioResponse = await apiClient.post(
           "/attachment_management/presigned_url",
           data: data,
-          options: getAuthHeaders(userProvider));
+          options: getAuthHeaders(context));
       Attachment? attachment = Attachment.fromJson(dioResponse.data);
 
       //upload to s3
       final dio = Dio();
       if (attachment.s3Key != null && attachment.s3Url != null) {
-        final Response S3Response = await dio.put(attachment.s3Url.toString(),
+        await dio.put(attachment.s3Url.toString(),
             data: file.readAsBytesSync(),
             options: Options(headers: {
               'Accept': "*/*",
@@ -99,20 +94,14 @@ class PostService {
         Provider.of<PostsProvider>(context, listen: false);
     final AppProvider appProvider =
         Provider.of<AppProvider>(context, listen: false);
-    final UserProvider userProvider =
-        Provider.of<UserProvider>(context, listen: false);
 
     postsProvider.setLoader(true);
     try {
       //58977
       final Response dioResponse = await apiClient.put(
           "/attachment_management/upload_attachment",
-          options: getAuthHeaders(userProvider),
-          data: {
-            "s3_key": attachment?.s3Key,
-            "user_id": userProvider.user?.id,
-            "description": description
-          });
+          options: getAuthHeaders(context),
+          data: {"s3_key": attachment?.s3Key, "description": description});
       Post? post = Post.fromJson(dioResponse.data);
 
       if (post != null) {
@@ -142,21 +131,16 @@ class PostService {
     }
   }
 
-  void deletePost(String postId, BuildContext context) async {
+  void deletePost(
+      Map<String, dynamic> queryParams, BuildContext context) async {
     final PostsProvider postsProvider =
         Provider.of<PostsProvider>(context, listen: false);
-    final UserProvider userProvider =
-        Provider.of<UserProvider>(context, listen: false);
 
     postsProvider.setLoader(true);
     try {
       //58977
       await apiClient.delete("/posts",
-          queryParameters: {
-            "user_id": userProvider.user?.id,
-            "post_id": postId
-          },
-          options: getAuthHeaders(userProvider));
+          queryParameters: queryParams, options: getAuthHeaders(context));
 
       getPosts(context);
       postsProvider.setLoader(false);
