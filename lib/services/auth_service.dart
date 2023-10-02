@@ -37,8 +37,13 @@ class AuthService {
           "=========== statusCode: ${errorResponse?.statusCode} ==============");
       debugPrint("=========== error: ${errorResponse?.data} ==============");
 
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errorResponse?.data["message"])));
+      if (dioError.type == DioExceptionType.badResponse) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(errorResponse?.data)));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(errorResponse?.data["message"])));
+      }
     } catch (err) {
       userProvider.setLoader(false);
       debugPrint("=========== sign in user catch block ==============");
@@ -74,8 +79,13 @@ class AuthService {
           "=========== statusCode: ${errorResponse?.statusCode} ==============");
       debugPrint("=========== error: ${errorResponse?.data} ==============");
 
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errorResponse?.data["message"])));
+      if (dioError.type == DioExceptionType.badResponse) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(errorResponse?.data)));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(errorResponse?.data["message"])));
+      }
     } catch (err) {
       userProvider.setLoader(false);
       debugPrint("=========== sign up user catch block ==============");

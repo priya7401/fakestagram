@@ -17,8 +17,8 @@ class PostService {
     postsProvider.setLoader(true);
     try {
       //58977
-      final Response dioResponse =
-          await apiClient.get("/posts", options: getAuthHeaders(context));
+      final Response dioResponse = await apiClient.get("/post_management/posts",
+          options: getAuthHeaders(context));
       final posts = PostList.fromJson(dioResponse.data);
 
       postsProvider.setPosts(posts.posts);
@@ -31,8 +31,13 @@ class PostService {
           "=========== statusCode: ${errorResponse?.statusCode} ==============");
       debugPrint("=========== error: ${errorResponse?.data} ==============");
 
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errorResponse?.data["message"])));
+      if (dioError.type == DioExceptionType.badResponse) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(errorResponse?.data)));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(errorResponse?.data["message"])));
+      }
     } catch (err) {
       postsProvider.setLoader(false);
       debugPrint("=========== get posts list catch block ==============");
@@ -79,8 +84,13 @@ class PostService {
           "=========== statusCode: ${errorResponse?.statusCode} ==============");
       debugPrint("=========== error: ${errorResponse?.data} ==============");
 
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errorResponse?.data["message"])));
+      if (dioError.type == DioExceptionType.badResponse) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(errorResponse?.data)));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(errorResponse?.data["message"])));
+      }
     } catch (err) {
       postsProvider.setLoader(false);
       debugPrint("=========== get presinged url catch block ==============");
@@ -98,7 +108,7 @@ class PostService {
     postsProvider.setLoader(true);
     try {
       //58977
-      final Response dioResponse = await apiClient.put(
+      final Response dioResponse = await apiClient.post(
           "/attachment_management/upload_attachment",
           options: getAuthHeaders(context),
           data: {"s3_key": attachment?.s3Key, "description": description});
@@ -122,8 +132,13 @@ class PostService {
           "=========== statusCode: ${errorResponse?.statusCode} ==============");
       debugPrint("=========== error: ${errorResponse?.data} ==============");
 
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errorResponse?.data["message"])));
+      if (dioError.type == DioExceptionType.badResponse) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(errorResponse?.data)));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(errorResponse?.data["message"])));
+      }
     } catch (err) {
       postsProvider.setLoader(false);
       debugPrint("=========== upload attachment catch block ==============");
@@ -152,11 +167,51 @@ class PostService {
           "=========== statusCode: ${errorResponse?.statusCode} ==============");
       debugPrint("=========== error: ${errorResponse?.data} ==============");
 
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errorResponse?.data["message"])));
+      if (dioError.type == DioExceptionType.badResponse) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(errorResponse?.data)));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(errorResponse?.data["message"])));
+      }
     } catch (err) {
       postsProvider.setLoader(false);
       debugPrint("=========== delete post catch block ==============");
+      debugPrint("=========== $err ==============");
+    }
+  }
+
+  void likeDislikePost(
+      Map<String, dynamic> queryParams, BuildContext context) async {
+    final PostsProvider postsProvider =
+        Provider.of<PostsProvider>(context, listen: false);
+
+    postsProvider.setLoader(true);
+    try {
+      //58977
+      await apiClient.put("/post_manamgement/posts/like",
+          queryParameters: queryParams, options: getAuthHeaders(context));
+
+      getPosts(context);
+      postsProvider.setLoader(false);
+    } on DioException catch (dioError) {
+      postsProvider.setLoader(false);
+      final Response? errorResponse = dioError.response;
+      debugPrint("=========== like-dislike post error block ==============");
+      debugPrint(
+          "=========== statusCode: ${errorResponse?.statusCode} ==============");
+      debugPrint("=========== error: ${errorResponse?.data} ==============");
+
+      if (dioError.type == DioExceptionType.badResponse) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(errorResponse?.data)));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(errorResponse?.data["message"])));
+      }
+    } catch (err) {
+      postsProvider.setLoader(false);
+      debugPrint("=========== like-dislike post catch block ==============");
       debugPrint("=========== $err ==============");
     }
   }

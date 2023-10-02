@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fakestagram/providers/providers.dart';
 import 'package:fakestagram/services/post_service.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +42,7 @@ class ProfilePostsDetailView extends StatelessWidget {
                           children: [
                             CircleAvatar(
                               radius: 20,
-                              backgroundImage: NetworkImage(profilePicUrl),
+                              backgroundImage: CachedNetworkImageProvider(profilePicUrl),
                             ),
                             SizedBox(
                               width: 10,
@@ -101,8 +102,17 @@ class ProfilePostsDetailView extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(Icons.favorite_border),
+                                  onPressed: () {
+                                    PostService().likeDislikePost(
+                                        {"post_id": post.id.toString()},
+                                        context);
+                                  },
+                                  icon: post.userLiked == true
+                                      ? Icon(
+                                          Icons.favorite,
+                                          color: Colors.redAccent,
+                                        )
+                                      : Icon(Icons.favorite_border),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.symmetric(

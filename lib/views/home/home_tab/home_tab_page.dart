@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fakestagram/utils/app_constants.dart';
 import 'package:flutter/material.dart';
 
@@ -45,7 +46,8 @@ class _HomeTabPageState extends State<HomeTabPage> {
                   children: [
                     CircleAvatar(
                       radius: 20,
-                      backgroundImage: NetworkImage(profilePicUrl),
+                      backgroundImage:
+                          CachedNetworkImageProvider(profilePicUrl),
                     ),
                     SizedBox(
                       width: 10,

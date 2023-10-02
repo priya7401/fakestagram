@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fakestagram/models/post/post.dart';
 import 'package:fakestagram/providers/posts_provider.dart';
 import 'package:fakestagram/providers/user_provider.dart';
@@ -51,7 +52,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                 children: [
                   CircleAvatar(
                     radius: 30,
-                    backgroundImage: NetworkImage(profilePicUrl),
+                    backgroundImage: CachedNetworkImageProvider(profilePicUrl),
                   ),
                   Column(
                     children: [
@@ -120,7 +121,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                                                   ProfilePostsDetailView()));
                                     },
                                     child: Image(
-                                      image: NetworkImage(
+                                      image: CachedNetworkImageProvider(
                                           post.attachment?.s3Url ?? ""),
                                       fit: BoxFit.cover,
                                     ),
