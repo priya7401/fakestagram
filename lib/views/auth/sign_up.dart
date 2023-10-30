@@ -20,6 +20,8 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
   final TextEditingController confirmPassword = TextEditingController();
+  bool _passwordVisible = false;
+  bool _confirmPasswordvisible = false;
 
   @override
   void dispose() {
@@ -116,8 +118,21 @@ class _SignUpState extends State<SignUp> {
                         ),
                         TextFormField(
                           controller: password,
-                          decoration:
-                              InputDecoration(hintText: 'Enter password'),
+                          decoration: InputDecoration(
+                              hintText: 'Enter password',
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _passwordVisible = !_passwordVisible;
+                                  });
+                                },
+                                icon: Icon(
+                                  _passwordVisible
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                ),
+                              )),
+                          obscureText: !_passwordVisible,
                           validator: (String? value) {
                             if (value == null || value.isEmpty) {
                               return "Error! password cannot be empty";
@@ -142,7 +157,22 @@ class _SignUpState extends State<SignUp> {
                         TextFormField(
                           controller: confirmPassword,
                           decoration:
-                              InputDecoration(hintText: 'Enter password'),
+                              InputDecoration(
+                              hintText: 'Enter password',
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _confirmPasswordvisible =
+                                        !_confirmPasswordvisible;
+                                  });
+                                },
+                                icon: Icon(
+                                  _confirmPasswordvisible
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                ),
+                              )),
+                          obscureText: !_confirmPasswordvisible,
                           validator: (String? value) {
                             if (value == null || value.isEmpty) {
                               return "Error! password cannot be empty";

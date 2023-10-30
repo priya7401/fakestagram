@@ -5,10 +5,18 @@ class UserProvider extends ChangeNotifier {
   User? _user;
   bool? _isLoading = false;
   String? _token;
+  List<User>? _followSuggestions;
+  List<User>? _followRequests;
+  List<User>? _followers;
+  List<User>? _following;
 
   User? get user => _user;
   bool get isLoading => _isLoading ?? false;
   String? get token => _token;
+  List<User>? get followSuggestions => _followSuggestions ?? [];
+  List<User>? get followRequests => _followRequests ?? [];
+  List<User>? get followers => _followers ?? [];
+  List<User>? get following => _following ?? [];
 
   void setLoader(bool? value) {
     _isLoading = value;
@@ -22,6 +30,26 @@ class UserProvider extends ChangeNotifier {
 
   void setToken(String? token) {
     _token = token;
+    notifyListeners();
+  }
+
+  void setFollowSuggestions(data) {
+    _followSuggestions = data;
+    notifyListeners();
+  }
+
+  void setFollowRequests(data) {
+    _followRequests = data;
+    notifyListeners();
+  }
+
+  void setFollowers(data) {
+    _followers = data;
+    notifyListeners();
+  }
+
+  void setFollowing(data) {
+    _following = data;
     notifyListeners();
   }
 }

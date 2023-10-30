@@ -5,12 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-Widget progressIndicator() {
-  return CircularProgressIndicator(
-    color: AppConstants.primaryColor,
-  );
-}
-
 pickFile(ImageSource imageSource) async {
   _pickFile() async {
     final XFile? pickedFile =
@@ -39,5 +33,52 @@ pickFile(ImageSource imageSource) async {
         return _pickFile();
       }
     }
+  }
+}
+
+Widget progressIndicator() {
+  return Transform.scale(
+    scale: 1,
+    child: Center(
+      child: SizedBox(
+        height: 40,
+        width: 40,
+        child: CircularProgressIndicator(
+          strokeWidth: 3,
+          color: AppConstants.primaryColor,
+        ),
+      ),
+    ),
+  );
+}
+
+class SmallThemeButton extends StatelessWidget {
+  String? buttonText;
+  Function? onTap;
+  Color? buttonBGColor;
+  SmallThemeButton({
+    super.key,
+    this.buttonText,
+    this.onTap,
+    this.buttonBGColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          minimumSize: Size(40, 30),
+          padding: const EdgeInsets.symmetric(horizontal: 13),
+          backgroundColor: buttonBGColor),
+      child: Text(buttonText ?? ""),
+      onPressed: () {
+        if (onTap != null) {
+          onTap!();
+        }
+      },
+    );
   }
 }

@@ -39,7 +39,7 @@ class AuthService {
 
       if (dioError.type == DioExceptionType.badResponse) {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(errorResponse?.data)));
+            .showSnackBar(SnackBar(content: Text(errorResponse?.data.toString() ?? "")));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(errorResponse?.data["message"])));
@@ -81,7 +81,8 @@ class AuthService {
 
       if (dioError.type == DioExceptionType.badResponse) {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(errorResponse?.data)));
+            .showSnackBar(
+            SnackBar(content: Text(errorResponse?.data.toString() ?? "")));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(errorResponse?.data["message"])));

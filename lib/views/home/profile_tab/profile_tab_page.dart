@@ -2,8 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fakestagram/models/post/post.dart';
 import 'package:fakestagram/providers/posts_provider.dart';
 import 'package:fakestagram/providers/user_provider.dart';
+import 'package:fakestagram/services/user_service.dart';
+import 'package:fakestagram/utils/global_widgets.dart';
 import 'package:fakestagram/views/home/home_page.dart';
 import 'package:fakestagram/views/home/profile_tab/post_detail_view.dart';
+import 'package:fakestagram/views/home/profile_tab/followers_following_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -64,25 +67,44 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                       Text('Posts')
                     ],
                   ),
-                  Column(
-                    children: const [
-                      Text(
-                        '100',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 16),
-                      ),
-                      Text('Followers')
-                    ],
+                  InkWell(
+                    onTap: () {
+                      UserService().followersList(context);
+                      UserService().followSuggestionsList(context);
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => FollowersFollowingPage(
+                                tabIndex: 0,
+                              )));
+                    },
+                    child: Column(
+                      children: [
+                        Text(
+                          "${userProvider.user?.followers?.length ?? 0}",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600, fontSize: 16),
+                        ),
+                        Text('Followers')
+                      ],
+                    ),
                   ),
-                  Column(
-                    children: const [
-                      Text(
-                        '125',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 16),
-                      ),
-                      Text('following')
-                    ],
+                  InkWell(
+                    onTap: () {
+                      UserService().followingList(context);
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => FollowersFollowingPage(
+                                tabIndex: 1,
+                              )));
+                    },
+                    child: Column(
+                      children: [
+                        Text(
+                          "${userProvider.user?.following?.length ?? 0}",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600, fontSize: 16),
+                        ),
+                        Text('following')
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -98,9 +120,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                 height: 15,
               ),
               postProvider.isLoading
-                  ? const CircularProgressIndicator(
-                      strokeWidth: 2,
-                    )
+                  ? progressIndicator()
                   : GridView(
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
