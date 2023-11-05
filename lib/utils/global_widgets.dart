@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:fakestagram/utils/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -80,5 +81,21 @@ class SmallThemeButton extends StatelessWidget {
         }
       },
     );
+  }
+}
+
+apiSnackbar(BuildContext context, DioException dioError) {
+  final Response? errorResponse = dioError.response;
+
+  debugPrint(
+      "=========== statusCode: ${errorResponse?.statusCode} ==============");
+  debugPrint("=========== error: ${errorResponse?.data} ==============");
+
+  if (dioError.type == DioExceptionType.badResponse) {
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorResponse?.data.toString() ?? "")));
+  } else {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(errorResponse?.data["message"])));
   }
 }

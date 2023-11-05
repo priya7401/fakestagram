@@ -27,12 +27,12 @@ class User {
 
   String? email;
 
-  List<User>? followers;
+  List<String>? followers;
 
-  List<User>? following;
+  List<String>? following;
 
   @JsonKey(name: "follow_requests")
-  List<User>? followRequests;
+  List<String>? followRequests;
 
   List<Post>? posts;
 
@@ -43,10 +43,24 @@ class User {
 
 @JsonSerializable(explicitToJson: true)
 class UserList {
-  UserList({this.users});
+  UserList({
+    this.followSuggestions,
+    this.followRequests,
+    this.followers,
+    this.following,
+  });
 
   @JsonKey(name: "follow_suggestions")
-  List<User>? users;
+  List<User>? followSuggestions;
+
+  @JsonKey(name: "follow_requests")
+  List<User>? followRequests;
+
+  @JsonKey(name: "followers")
+  List<User>? followers;
+
+  @JsonKey(name: "following")
+  List<User>? following;
 
   factory UserList.fromJson(Map<String, dynamic> json) =>
       _$UserListFromJson(json);

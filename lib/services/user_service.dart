@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:fakestagram/services/dio_client.dart';
 import 'package:fakestagram/models/models.dart';
 import 'package:fakestagram/providers/providers.dart';
+import 'package:fakestagram/utils/global_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,29 +21,18 @@ class UserService {
       final Response dioResponse = await apiClient.get(
           "/user_management/user/follow_requests",
           options: getAuthHeaders(context));
-      final followRequests =
-          UserList.fromJson(dioResponse.data["follow_requests"]);
+      final followRequests = UserList.fromJson(dioResponse.data);
 
-      userProvider.setFollowRequests(followRequests.users);
+      userProvider.setFollowRequests(followRequests.followRequests);
       userProvider.setLoader(false);
     } on DioException catch (dioError) {
       userProvider.setLoader(false);
-      final Response? errorResponse = dioError.response;
       debugPrint(
           "=========== get follow requests list error block ==============");
-      debugPrint(
-          "=========== statusCode: ${errorResponse?.statusCode} ==============");
-      debugPrint("=========== error: ${errorResponse?.data} ==============");
-
-      if (dioError.type == DioExceptionType.badResponse) {
-        ScaffoldMessenger.of(appProvider.globalNavigator!.currentContext!)
-            .showSnackBar(
-                SnackBar(content: Text(errorResponse?.data.toString() ?? "")));
-      } else {
-        ScaffoldMessenger.of(appProvider.globalNavigator!.currentContext!)
-            .showSnackBar(
-                SnackBar(content: Text(errorResponse?.data["message"])));
-      }
+      apiSnackbar(
+        appProvider.globalNavigator!.currentContext ?? context,
+        dioError,
+      );
     } catch (err) {
       userProvider.setLoader(false);
       debugPrint(
@@ -65,26 +55,16 @@ class UserService {
           options: getAuthHeaders(context));
       final followSuggestions = UserList.fromJson(dioResponse.data);
 
-      userProvider.setFollowSuggestions(followSuggestions.users);
+      userProvider.setFollowSuggestions(followSuggestions.followSuggestions);
       userProvider.setLoader(false);
     } on DioException catch (dioError) {
       userProvider.setLoader(false);
-      final Response? errorResponse = dioError.response;
       debugPrint(
           "=========== get follow suggestions list error block ==============");
-      debugPrint(
-          "=========== statusCode: ${errorResponse?.statusCode} ==============");
-      debugPrint("=========== error: ${errorResponse?.data} ==============");
-
-      if (dioError.type == DioExceptionType.badResponse) {
-        ScaffoldMessenger.of(appProvider.globalNavigator!.currentContext!)
-            .showSnackBar(
-                SnackBar(content: Text(errorResponse?.data.toString() ?? "")));
-      } else {
-        ScaffoldMessenger.of(appProvider.globalNavigator!.currentContext!)
-            .showSnackBar(
-                SnackBar(content: Text(errorResponse?.data["message"])));
-      }
+      apiSnackbar(
+        appProvider.globalNavigator!.currentContext ?? context,
+        dioError,
+      );
     } catch (err) {
       userProvider.setLoader(false);
       debugPrint(
@@ -110,27 +90,19 @@ class UserService {
       final user = User.fromJson(dioResponse.data["user"]);
 
       userProvider.setUser(user);
-      followRequestList(context);
-      followSuggestionsList(context);
+      followRequestList(appProvider.globalNavigator!.currentContext ?? context);
+      followSuggestionsList(
+          appProvider.globalNavigator!.currentContext ?? context);
+      followersList(appProvider.globalNavigator!.currentContext ?? context);
       userProvider.setLoader(false);
     } on DioException catch (dioError) {
       userProvider.setLoader(false);
-      final Response? errorResponse = dioError.response;
       debugPrint(
           "=========== accept reject request error block ==============");
-      debugPrint(
-          "=========== statusCode: ${errorResponse?.statusCode} ==============");
-      debugPrint("=========== error: ${errorResponse?.data} ==============");
-
-      if (dioError.type == DioExceptionType.badResponse) {
-        ScaffoldMessenger.of(appProvider.globalNavigator!.currentContext!)
-            .showSnackBar(
-                SnackBar(content: Text(errorResponse?.data.toString() ?? "")));
-      } else {
-        ScaffoldMessenger.of(appProvider.globalNavigator!.currentContext!)
-            .showSnackBar(
-                SnackBar(content: Text(errorResponse?.data["message"])));
-      }
+      apiSnackbar(
+        appProvider.globalNavigator!.currentContext ?? context,
+        dioError,
+      );
     } catch (err) {
       userProvider.setLoader(false);
       debugPrint(
@@ -151,27 +123,17 @@ class UserService {
       final Response dioResponse = await apiClient.get(
           "/user_management/user/followers",
           options: getAuthHeaders(context));
-      final followers = UserList.fromJson(dioResponse.data["followers"]);
+      final followers = UserList.fromJson(dioResponse.data);
 
-      userProvider.setFollowRequests(followers.users);
+      userProvider.setFollowers(followers.followers);
       userProvider.setLoader(false);
     } on DioException catch (dioError) {
       userProvider.setLoader(false);
-      final Response? errorResponse = dioError.response;
       debugPrint("=========== get followers list error block ==============");
-      debugPrint(
-          "=========== statusCode: ${errorResponse?.statusCode} ==============");
-      debugPrint("=========== error: ${errorResponse?.data} ==============");
-
-      if (dioError.type == DioExceptionType.badResponse) {
-        ScaffoldMessenger.of(appProvider.globalNavigator!.currentContext!)
-            .showSnackBar(
-                SnackBar(content: Text(errorResponse?.data.toString() ?? "")));
-      } else {
-        ScaffoldMessenger.of(appProvider.globalNavigator!.currentContext!)
-            .showSnackBar(
-                SnackBar(content: Text(errorResponse?.data["message"])));
-      }
+      apiSnackbar(
+        appProvider.globalNavigator!.currentContext ?? context,
+        dioError,
+      );
     } catch (err) {
       userProvider.setLoader(false);
       debugPrint("=========== get followers list catch block ==============");
@@ -193,25 +155,15 @@ class UserService {
           options: getAuthHeaders(context));
       final following = UserList.fromJson(dioResponse.data["following"]);
 
-      userProvider.setFollowing(following.users);
+      userProvider.setFollowing(following.following);
       userProvider.setLoader(false);
     } on DioException catch (dioError) {
       userProvider.setLoader(false);
-      final Response? errorResponse = dioError.response;
       debugPrint("=========== get following list error block ==============");
-      debugPrint(
-          "=========== statusCode: ${errorResponse?.statusCode} ==============");
-      debugPrint("=========== error: ${errorResponse?.data} ==============");
-
-      if (dioError.type == DioExceptionType.badResponse) {
-        ScaffoldMessenger.of(appProvider.globalNavigator!.currentContext!)
-            .showSnackBar(
-                SnackBar(content: Text(errorResponse?.data.toString() ?? "")));
-      } else {
-        ScaffoldMessenger.of(appProvider.globalNavigator!.currentContext!)
-            .showSnackBar(
-                SnackBar(content: Text(errorResponse?.data["message"])));
-      }
+      apiSnackbar(
+        appProvider.globalNavigator!.currentContext ?? context,
+        dioError,
+      );
     } catch (err) {
       userProvider.setLoader(false);
       debugPrint("=========== get following list catch block ==============");
@@ -235,25 +187,15 @@ class UserService {
       final user = User.fromJson(dioResponse.data["user"]);
 
       userProvider.setUser(user);
-      followersList(context);
+      followersList(appProvider.globalNavigator!.currentContext ?? context);
       userProvider.setLoader(false);
     } on DioException catch (dioError) {
       userProvider.setLoader(false);
-      final Response? errorResponse = dioError.response;
       debugPrint("=========== remove follower error block ==============");
-      debugPrint(
-          "=========== statusCode: ${errorResponse?.statusCode} ==============");
-      debugPrint("=========== error: ${errorResponse?.data} ==============");
-
-      if (dioError.type == DioExceptionType.badResponse) {
-        ScaffoldMessenger.of(appProvider.globalNavigator!.currentContext!)
-            .showSnackBar(
-                SnackBar(content: Text(errorResponse?.data.toString() ?? "")));
-      } else {
-        ScaffoldMessenger.of(appProvider.globalNavigator!.currentContext!)
-            .showSnackBar(
-                SnackBar(content: Text(errorResponse?.data["message"])));
-      }
+      apiSnackbar(
+        appProvider.globalNavigator!.currentContext ?? context,
+        dioError,
+      );
     } catch (err) {
       userProvider.setLoader(false);
       debugPrint("=========== remove follower catch block ==============");
@@ -277,25 +219,16 @@ class UserService {
       final user = User.fromJson(dioResponse.data["user"]);
 
       userProvider.setUser(user);
-      followSuggestionsList(context);
+      followSuggestionsList(
+          appProvider.globalNavigator!.currentContext ?? context);
       userProvider.setLoader(false);
     } on DioException catch (dioError) {
       userProvider.setLoader(false);
-      final Response? errorResponse = dioError.response;
       debugPrint("=========== follow user error block ==============");
-      debugPrint(
-          "=========== statusCode: ${errorResponse?.statusCode} ==============");
-      debugPrint("=========== error: ${errorResponse?.data} ==============");
-
-      if (dioError.type == DioExceptionType.badResponse) {
-        ScaffoldMessenger.of(appProvider.globalNavigator!.currentContext!)
-            .showSnackBar(
-                SnackBar(content: Text(errorResponse?.data.toString() ?? "")));
-      } else {
-        ScaffoldMessenger.of(appProvider.globalNavigator!.currentContext!)
-            .showSnackBar(
-                SnackBar(content: Text(errorResponse?.data["message"])));
-      }
+      apiSnackbar(
+        appProvider.globalNavigator!.currentContext ?? context,
+        dioError,
+      );
     } catch (err) {
       userProvider.setLoader(false);
       debugPrint("=========== follow user catch block ==============");

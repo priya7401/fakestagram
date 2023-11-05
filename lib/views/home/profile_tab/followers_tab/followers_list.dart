@@ -87,6 +87,7 @@ class FollowersList extends StatelessWidget {
                                               UserService().removeFollower(
                                                   {"follower_id": follower.id},
                                                   context);
+                                              Navigator.of(context).pop();
                                             },
                                             child: Text(
                                               "Remove",
@@ -105,7 +106,7 @@ class FollowersList extends StatelessWidget {
                     ),
                   );
                 }).toList() ??
-                [],
+                [Text('No followers')],
           )
         ],
       );

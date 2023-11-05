@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:fakestagram/services/dio_client.dart';
 import 'package:fakestagram/models/models.dart';
 import 'package:fakestagram/providers/providers.dart';
+import 'package:fakestagram/utils/global_widgets.dart';
 import 'package:fakestagram/views/home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -27,23 +28,17 @@ class AuthService {
       userProvider.setToken(token);
       userProvider.setLoader(false);
 
-      Navigator.of(appProvider.globalNavigator!.currentContext!)
-          .pushReplacement(MaterialPageRoute(builder: (context) => HomePage()));
+      Navigator.of(appProvider.globalNavigator!.currentContext ?? context)
+          .pushReplacement(
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
     } on DioException catch (dioError) {
       userProvider.setLoader(false);
-      final Response? errorResponse = dioError.response;
       debugPrint("=========== sign in user error block ==============");
-      debugPrint(
-          "=========== statusCode: ${errorResponse?.statusCode} ==============");
-      debugPrint("=========== error: ${errorResponse?.data} ==============");
-
-      if (dioError.type == DioExceptionType.badResponse) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(errorResponse?.data.toString() ?? "")));
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(errorResponse?.data["message"])));
-      }
+      apiSnackbar(
+        appProvider.globalNavigator!.currentContext ?? context,
+        dioError,
+      );
     } catch (err) {
       userProvider.setLoader(false);
       debugPrint("=========== sign in user catch block ==============");
@@ -69,24 +64,17 @@ class AuthService {
       userProvider.setToken(token);
       userProvider.setLoader(false);
 
-      Navigator.of(appProvider.globalNavigator!.currentContext!)
-          .pushReplacement(MaterialPageRoute(builder: (context) => HomePage()));
+      Navigator.of(appProvider.globalNavigator!.currentContext ?? context)
+          .pushReplacement(
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
     } on DioException catch (dioError) {
       userProvider.setLoader(false);
-      final Response? errorResponse = dioError.response;
       debugPrint("=========== sign up user error block ==============");
-      debugPrint(
-          "=========== statusCode: ${errorResponse?.statusCode} ==============");
-      debugPrint("=========== error: ${errorResponse?.data} ==============");
-
-      if (dioError.type == DioExceptionType.badResponse) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(
-            SnackBar(content: Text(errorResponse?.data.toString() ?? "")));
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(errorResponse?.data["message"])));
-      }
+      apiSnackbar(
+        appProvider.globalNavigator!.currentContext ?? context,
+        dioError,
+      );
     } catch (err) {
       userProvider.setLoader(false);
       debugPrint("=========== sign up user catch block ==============");

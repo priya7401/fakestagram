@@ -16,7 +16,8 @@ class FollowersTab extends StatelessWidget {
       return ListView(
         shrinkWrap: true,
         children: [
-          (userProvider.followRequests?.isNotEmpty ?? true)
+          (userProvider.user?.followRequests?.isNotEmpty ?? true) &&
+                  !(userProvider.isLoading)
               ? ListTile(
                   title: Text(
                     'Follow requests',
@@ -48,10 +49,13 @@ class FollowersTab extends StatelessWidget {
               : (userProvider.user?.followers?.isEmpty ?? true)
                   ? FollowSuggestions()
                   : ListView(
-                      shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
                       children: const [
                         FollowersList(),
+                        SizedBox(
+                          height: 20,
+                        ),
                         FollowSuggestions(),
                       ],
                     )
