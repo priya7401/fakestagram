@@ -139,7 +139,7 @@ class PostService {
     postsProvider.setLoader(true);
     try {
       //58977
-      await apiClient.delete("/posts",
+      await apiClient.delete("/post_manamgement/posts",
           queryParameters: queryParams, options: getAuthHeaders(context));
 
       getPosts(appProvider.globalNavigator!.currentContext ?? context);
