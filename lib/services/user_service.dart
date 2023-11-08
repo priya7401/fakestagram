@@ -153,7 +153,7 @@ class UserService {
       final Response dioResponse = await apiClient.get(
           "/user_management/user/following",
           options: getAuthHeaders(context));
-      final following = UserList.fromJson(dioResponse.data["following"]);
+      final following = UserList.fromJson(dioResponse.data);
 
       userProvider.setFollowing(following.following);
       userProvider.setLoader(false);
@@ -221,6 +221,44 @@ class UserService {
       userProvider.setUser(user);
       followSuggestionsList(
           appProvider.globalNavigator!.currentContext ?? context);
+      ScaffoldMessenger.of(
+              appProvider.globalNavigator!.currentContext ?? context)
+          .showSnackBar(SnackBar(content: Text("Request sent")));
+      userProvider.setLoader(false);
+    } on DioException catch (dioError) {
+      userProvider.setLoader(false);
+      debugPrint("=========== follow user error block ==============");
+      apiSnackbar(
+        appProvider.globalNavigator!.currentContext ?? context,
+        dioError,
+      );
+    } catch (err) {
+      userProvider.setLoader(false);
+      debugPrint("=========== follow user catch block ==============");
+      debugPrint("=========== $err ==============");
+    }
+  }
+
+  void unfollowUser(Map<String, dynamic> data, BuildContext context) async {
+    final UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
+    final AppProvider appProvider =
+        Provider.of<AppProvider>(context, listen: false);
+
+    userProvider.setLoader(true);
+    try {
+      //58977
+      final Response dioResponse = await apiClient.put(
+          "/user_management/user/unfollow",
+          data: data,
+          options: getAuthHeaders(context));
+      final user = User.fromJson(dioResponse.data["user"]);
+
+      userProvider.setUser(user);
+      followingList(appProvider.globalNavigator!.currentContext ?? context);
+      ScaffoldMessenger.of(
+              appProvider.globalNavigator!.currentContext ?? context)
+          .showSnackBar(SnackBar(content: Text("Unfollowed user")));
       userProvider.setLoader(false);
     } on DioException catch (dioError) {
       userProvider.setLoader(false);

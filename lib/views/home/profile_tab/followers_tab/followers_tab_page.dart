@@ -1,7 +1,7 @@
 import 'package:fakestagram/providers/user_provider.dart';
 import 'package:fakestagram/services/user_service.dart';
 import 'package:fakestagram/utils/global_widgets.dart';
-import 'package:fakestagram/views/home/profile_tab/follow_requests_page.dart';
+import 'package:fakestagram/views/home/profile_tab/followers_tab/follow_requests_page.dart';
 import 'package:fakestagram/views/home/profile_tab/followers_tab/follow_suggestions.dart';
 import 'package:fakestagram/views/home/profile_tab/followers_tab/followers_list.dart';
 import 'package:flutter/material.dart';

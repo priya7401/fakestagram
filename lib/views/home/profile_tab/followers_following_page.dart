@@ -1,6 +1,6 @@
 import 'package:fakestagram/providers/user_provider.dart';
 import 'package:fakestagram/views/home/profile_tab/followers_tab/followers_tab_page.dart';
-import 'package:fakestagram/views/home/profile_tab/following_page.dart';
+import 'package:fakestagram/views/home/profile_tab/following_tab/following_tab_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
