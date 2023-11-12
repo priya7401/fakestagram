@@ -5,7 +5,10 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:provider/provider.dart';
 
 const baseUrl = "http://192.168.0.197:58703/api/v1";
-Dio dioClient = Dio(BaseOptions(baseUrl: baseUrl))
+Dio dioClient = Dio(BaseOptions(
+  baseUrl: baseUrl,
+  followRedirects: false,
+))
   ..interceptors.add(PrettyDioLogger(
       requestHeader: true,
       requestBody: true,

@@ -9,6 +9,7 @@ class UserProvider extends ChangeNotifier {
   List<User>? _followRequests;
   List<User>? _followers;
   List<User>? _following;
+  User? _follower;
 
   User? get user => _user;
   bool get isLoading => _isLoading ?? false;
@@ -17,6 +18,7 @@ class UserProvider extends ChangeNotifier {
   List<User>? get followRequests => _followRequests ?? [];
   List<User>? get followers => _followers ?? [];
   List<User>? get following => _following ?? [];
+  User? get follower => _follower;
 
   void setLoader(bool? value) {
     _isLoading = value;
@@ -50,6 +52,11 @@ class UserProvider extends ChangeNotifier {
 
   void setFollowing(data) {
     _following = data;
+    notifyListeners();
+  }
+
+  void setFollower(data) {
+    _follower = data;
     notifyListeners();
   }
 }

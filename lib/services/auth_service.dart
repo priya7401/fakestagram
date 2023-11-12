@@ -20,7 +20,10 @@ class AuthService {
     try {
       //58977
       final Response dioResponse =
-          await apiClient.post("/user_management/auth/login", data: data);
+          await apiClient.post(
+        "/user_management/auth/login",
+        data: data,
+      );
       final user = User.fromJson(dioResponse.data["user"]);
       final token = dioResponse.data["token"];
 
@@ -39,10 +42,12 @@ class AuthService {
         appProvider.globalNavigator!.currentContext ?? context,
         dioError,
       );
+      return;
     } catch (err) {
       userProvider.setLoader(false);
       debugPrint("=========== sign in user catch block ==============");
       debugPrint("=========== $err ==============");
+      return;
     }
   }
 
@@ -75,10 +80,12 @@ class AuthService {
         appProvider.globalNavigator!.currentContext ?? context,
         dioError,
       );
+      return;
     } catch (err) {
       userProvider.setLoader(false);
       debugPrint("=========== sign up user catch block ==============");
       debugPrint("=========== $err ==============");
+      return;
     }
   }
 }

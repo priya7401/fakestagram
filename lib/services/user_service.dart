@@ -9,6 +9,47 @@ import 'package:provider/provider.dart';
 class UserService {
   final Dio apiClient = dioClient;
 
+  void getUserDetails(BuildContext context, {String? followerId}) async {
+    final UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
+    final AppProvider appProvider =
+        Provider.of<AppProvider>(context, listen: false);
+
+    userProvider.setLoader(true);
+    try {
+      final Response dioResponse = await apiClient.get(
+        "/user_management/user/user_details",
+        options: getAuthHeaders(context),
+        queryParameters: {"follower_id": followerId},
+      );
+
+      final user = User.fromJson(dioResponse.data["user"]);
+      //if followerId is not null, get call made to fetch follower/following user details,
+      //so store data accordingly
+      if (followerId == null) {
+        final token = dioResponse.data["token"];
+        userProvider.setUser(user);
+        userProvider.setToken(token);
+      } else {
+        final user = User.fromJson(dioResponse.data["user"]);
+        userProvider.setFollower(user);
+      }
+
+      userProvider.setLoader(false);
+    } on DioException catch (dioError) {
+      userProvider.setLoader(false);
+      debugPrint("=========== get user details error block ==============");
+      apiSnackbar(
+        appProvider.globalNavigator!.currentContext ?? context,
+        dioError,
+      );
+    } catch (err) {
+      userProvider.setLoader(false);
+      debugPrint("=========== get user details catch block ==============");
+      debugPrint("=========== $err ==============");
+    }
+  }
+
   void followRequestList(BuildContext context) async {
     final UserProvider userProvider =
         Provider.of<UserProvider>(context, listen: false);

@@ -1,7 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fakestagram/providers/user_provider.dart';
-import 'package:fakestagram/services/user_service.dart';
+import 'package:fakestagram/services/services.dart';
 import 'package:fakestagram/utils/global_widgets.dart';
+import 'package:fakestagram/views/home/profile_tab/follower_profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -89,6 +90,14 @@ class FollowingPage extends StatelessWidget {
                                   });
                             },
                           ),
+                          onTap: () {
+                            UserService()
+                                .getUserDetails(context, followerId: user.id);
+                            PostService()
+                                .getPosts(context, followerId: user.id);
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => ProfileView()));
+                          },
                         );
                       }).toList() ??
                       [],

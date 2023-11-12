@@ -1,7 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fakestagram/providers/user_provider.dart';
-import 'package:fakestagram/services/user_service.dart';
+import 'package:fakestagram/services/services.dart';
 import 'package:fakestagram/utils/global_widgets.dart';
+import 'package:fakestagram/views/home/profile_tab/follower_profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -37,47 +38,57 @@ class _FollowRequestsPageState extends State<FollowRequestsPage> {
           child: userProvider.isLoading
               ? progressIndicator()
               : (userProvider.followRequests?.isNotEmpty ?? false)
-              ? ListView(
+                  ? ListView(
                       children: userProvider.followRequests?.map((user) {
-                        return ListTile(
-                          leading: CircleAvatar(
-                            radius: 30,
-                            backgroundImage:
-                                CachedNetworkImageProvider(profilePicUrl),
-                          ),
-                          title: Text(user.username ?? "N/A"),
-                          subtitle: Text(user.fullName ?? "N/A"),
-                          trailing: SizedBox(
-                            width: 160,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SmallThemeButton(
-                                  buttonText: "Confirm",
-                                  onTap: () {
-                                    UserService().acceptRejectRequest({
-                                      "follower_id": user.id,
-                                      "accept": true
-                                    }, context);
-                                  },
+                            return ListTile(
+                              leading: CircleAvatar(
+                                radius: 30,
+                                backgroundImage:
+                                    CachedNetworkImageProvider(profilePicUrl),
+                              ),
+                              title: Text(user.username ?? "N/A"),
+                              subtitle: Text(user.fullName ?? "N/A"),
+                              trailing: SizedBox(
+                                width: 160,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    SmallThemeButton(
+                                      buttonText: "Confirm",
+                                      onTap: () {
+                                        UserService().acceptRejectRequest({
+                                          "follower_id": user.id,
+                                          "accept": true
+                                        }, context);
+                                      },
+                                    ),
+                                    SmallThemeButton(
+                                      buttonText: "Delete",
+                                      onTap: () {
+                                        UserService().acceptRejectRequest({
+                                          "follower_id": user.id,
+                                          "accept": false
+                                        }, context);
+                                      },
+                                      buttonBGColor:
+                                          Colors.grey.withOpacity(0.4),
+                                    ),
+                                  ],
                                 ),
-                                SmallThemeButton(
-                                  buttonText: "Delete",
-                                  onTap: () {
-                                    UserService().acceptRejectRequest({
-                                      "follower_id": user.id,
-                                      "accept": false
-                                    }, context);
-                                  },
-                                  buttonBGColor: Colors.grey.withOpacity(0.4),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }).toList() ??
-                      [],
-                )
+                              ),
+                              onTap: () {
+                                UserService().getUserDetails(context,
+                                    followerId: user.id);
+                                PostService()
+                                    .getPosts(context, followerId: user.id);
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => ProfileView()));
+                              },
+                            );
+                          }).toList() ??
+                          [],
+                    )
                   : Text('No follow requests!'),
         ),
       );

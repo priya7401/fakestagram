@@ -93,9 +93,13 @@ apiSnackbar(BuildContext context, DioException dioError) {
 
   if (dioError.type == DioExceptionType.badResponse) {
     ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorResponse?.data.toString() ?? "")));
+        SnackBar(
+        content:
+            Text(errorResponse?.data.toString() ?? "Something went wrong")));
   } else {
     ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(errorResponse?.data["message"])));
+        .showSnackBar(SnackBar(
+        content:
+            Text(errorResponse?.data["message"] ?? "Something went wrong")));
   }
 }

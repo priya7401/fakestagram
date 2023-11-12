@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fakestagram/providers/providers.dart';
-import 'package:fakestagram/services/post_service.dart';
+import 'package:fakestagram/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;

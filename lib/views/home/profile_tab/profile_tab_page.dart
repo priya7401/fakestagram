@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fakestagram/models/post/post.dart';
 import 'package:fakestagram/providers/posts_provider.dart';
 import 'package:fakestagram/providers/user_provider.dart';
-import 'package:fakestagram/services/user_service.dart';
+import 'package:fakestagram/services/services.dart';
 import 'package:fakestagram/utils/global_widgets.dart';
 import 'package:fakestagram/views/home/home_page.dart';
 import 'package:fakestagram/views/home/profile_tab/post_detail_view.dart';
@@ -71,6 +71,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                     onTap: () {
                       UserService().followersList(context);
                       UserService().followSuggestionsList(context);
+                      UserService().followingList(context);
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => FollowersFollowingPage(
                                 tabIndex: 0,
@@ -90,6 +91,8 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                   InkWell(
                     onTap: () {
                       UserService().followingList(context);
+                      UserService().followersList(context);
+                      UserService().followSuggestionsList(context);
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => FollowersFollowingPage(
                                 tabIndex: 1,
@@ -109,13 +112,13 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                 ],
               ),
               Text(
-                'Name',
+                userProvider.user?.fullName ?? "N/A",
                 style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
               ),
               SizedBox(
                 height: 5,
               ),
-              Text(bio),
+              Text(userProvider.user?.bio ?? "N/A"),
               SizedBox(
                 height: 15,
               ),

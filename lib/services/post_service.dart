@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 class PostService {
   final Dio apiClient = dioClient;
 
-  void getPosts(BuildContext context) async {
+  void getPosts(BuildContext context, {String? followerId}) async {
     final PostsProvider postsProvider =
         Provider.of<PostsProvider>(context, listen: false);
     final AppProvider appProvider =
@@ -20,11 +20,21 @@ class PostService {
     postsProvider.setLoader(true);
     try {
       //58977
-      final Response dioResponse = await apiClient.get("/post_management/posts",
-          options: getAuthHeaders(context));
-      final posts = PostList.fromJson(dioResponse.data);
+      final Response dioResponse = await apiClient.get(
+        "/post_management/posts",
+        options: getAuthHeaders(context),
+        queryParameters: {"follower_id": followerId},
+      );
 
-      postsProvider.setPosts(posts.posts);
+      final posts = PostList.fromJson(dioResponse.data);
+      //if followerId is not null, get call made to fetch follower/following posts,
+      //so store data accordingly
+      if (followerId == null) {
+        postsProvider.setPosts(posts.posts);
+      } else {
+        postsProvider.setFollowerPosts(posts.posts);
+      }
+
       postsProvider.setLoader(false);
     } on DioException catch (dioError) {
       postsProvider.setLoader(false);

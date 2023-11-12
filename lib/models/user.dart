@@ -10,6 +10,7 @@ class User {
     this.username,
     this.fullName,
     this.email,
+    this.bio,
     this.followers,
     this.following,
     this.posts,
@@ -26,6 +27,8 @@ class User {
   String? fullName;
 
   String? email;
+
+  String? bio;
 
   List<String>? followers;
 
