@@ -5,6 +5,7 @@ import 'package:fakestagram/providers/user_provider.dart';
 import 'package:fakestagram/services/services.dart';
 import 'package:fakestagram/utils/global_widgets.dart';
 import 'package:fakestagram/views/home/home_page.dart';
+import 'package:fakestagram/views/home/profile_tab/edit_profile.dart';
 import 'package:fakestagram/views/home/profile_tab/post_detail_view.dart';
 import 'package:fakestagram/views/home/profile_tab/followers_following_page.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +44,15 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
               },
               icon: const Icon(Icons.add_box_outlined),
             ),
+            IconButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => EditProfile(
+                          user: userProvider.user,
+                        )));
+              },
+              icon: Icon(Icons.menu_rounded),
+            )
           ],
         ),
         body: SafeArea(
@@ -111,12 +121,15 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                   ),
                 ],
               ),
+              SizedBox(
+                height: 20,
+              ),
               Text(
                 userProvider.user?.fullName ?? "N/A",
                 style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
               ),
               SizedBox(
-                height: 5,
+                height: 10,
               ),
               Text(userProvider.user?.bio ?? "N/A"),
               SizedBox(
@@ -160,9 +173,6 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
     });
   }
 }
-
-String bio =
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in quam quam. ";
 
 String profilePicUrl =
     "https://media.istockphoto.com/id/909772478/photo/brown-teddy-bear-isolated-in-front-of-a-white-background.jpg?s=612x612&w=0&k=20&c=F4252bOrMfRTB8kWm2oM2jlb9JXY08tKCaO5G_ms1Uw=";

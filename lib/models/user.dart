@@ -13,7 +13,7 @@ class User {
     this.bio,
     this.followers,
     this.following,
-    this.posts,
+    this.isPublic,
     this.followRequests,
   });
 
@@ -37,7 +37,8 @@ class User {
   @JsonKey(name: "follow_requests")
   List<String>? followRequests;
 
-  List<Post>? posts;
+  @JsonKey(name: "is_public")
+  bool? isPublic;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 

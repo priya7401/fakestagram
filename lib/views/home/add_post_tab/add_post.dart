@@ -26,7 +26,8 @@ class _AddPostState extends State<AddPost> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppProvider>(builder: (context, appProvider, child) {
+    return Consumer2<AppProvider, PostsProvider>(
+        builder: (context, appProvider, postsProvider, child) {
       return Scaffold(
         appBar: AppBar(
           title: Text('New Post'),
@@ -72,7 +73,9 @@ class _AddPostState extends State<AddPost> {
                                                 setState(() {
                                                   image = file;
                                                 });
+                                                if (context.mounted) {
                                                 Navigator.of(context).pop();
+                                                }
                                               },
                                               child:
                                                   Text('Upload from gallery')),
@@ -83,7 +86,9 @@ class _AddPostState extends State<AddPost> {
                                                 setState(() {
                                                   image = file;
                                                 });
+                                                if (context.mounted) {
                                                 Navigator.of(context).pop();
+                                                }
                                               },
                                               child:
                                                   Text('Upload from camera')),
@@ -119,17 +124,33 @@ class _AddPostState extends State<AddPost> {
                 width: 0,
                 height: 50,
               ),
-              ElevatedButton(
-                onPressed: () {
-                  if (image != null) {
-                    PostService().getPresingedUrl({
-                      "file_name": image?.path.split('/').last,
-                      "file_type": image?.path.split('.').last
-                    }, image!, context, description: description.text.trim());
-                  }
-                },
-                child: Text('Create post'),
-              )
+              postsProvider.isLoading
+                  ? const ProgressIndicatorButton()
+                  : SubmitButton(
+                      buttonText: 'Create post',
+                      onTap: () async {
+                        if (image != null) {
+                          PostService().getPresingedUrl(
+                            {
+                              "file_name": image?.path.split('/').last,
+                              "file_type": image?.path.split('.').last
+                            },
+                            image!,
+                            context,
+                            callback: (String s3Key) async {
+                              PostService().uploadPost(
+                                {
+                                  "s3_key": s3Key,
+                                  "description": description.text,
+                                },
+                                appProvider.globalNavigator!.currentContext ??
+                                    context,
+                              );
+                            },
+                          );
+                        }
+                      },
+                    ),
             ],
           ),
         )),

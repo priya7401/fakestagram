@@ -1,8 +1,7 @@
-import 'package:email_validator/email_validator.dart';
 import 'package:fakestagram/providers/providers.dart';
 import 'package:fakestagram/services/services.dart';
-import 'package:fakestagram/utils/app_constants.dart';
 import 'package:fakestagram/utils/global_widgets.dart';
+import 'package:fakestagram/utils/text_fields.dart';
 import 'package:fakestagram/views/auth/sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -20,8 +19,8 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
   final TextEditingController confirmPassword = TextEditingController();
-  bool _passwordVisible = false;
-  bool _confirmPasswordvisible = false;
+  // bool _passwordVisible = false;
+  // bool _confirmPasswordvisible = false;
 
   @override
   void dispose() {
@@ -69,16 +68,10 @@ class _SignUpState extends State<SignUp> {
                           width: 0,
                           height: 20,
                         ),
-                        TextFormField(
-                          controller: username,
-                          decoration:
-                              InputDecoration(hintText: 'Enter username'),
-                          validator: (String? value) {
-                            if (value == null || value.isEmpty) {
-                              return "Error! Username cannot be empty";
-                            }
-                            return null;
-                          },
+                        CustomTextField(
+                          textEditingController: username,
+                          hintText: 'Enter username',
+                          fieldName: 'username',
                         ),
                         SizedBox(
                           width: 0,
@@ -92,17 +85,11 @@ class _SignUpState extends State<SignUp> {
                           width: 0,
                           height: 20,
                         ),
-                        TextFormField(
-                          controller: email,
-                          decoration: InputDecoration(hintText: 'Enter email'),
-                          validator: (String? value) {
-                            if (value == null || value.isEmpty) {
-                              return "Error! Email cannot be empty";
-                            } else if (!EmailValidator.validate(value)) {
-                              return "Please enter valid email Id";
-                            }
-                            return null;
-                          },
+                        CustomTextField(
+                          textEditingController: email,
+                          hintText: 'Enter email',
+                          fieldName: 'email',
+                          isEmail: true,
                         ),
                         SizedBox(
                           width: 0,
@@ -116,31 +103,8 @@ class _SignUpState extends State<SignUp> {
                           width: 0,
                           height: 10,
                         ),
-                        TextFormField(
-                          controller: password,
-                          decoration: InputDecoration(
-                              hintText: 'Enter password',
-                              suffixIcon: IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _passwordVisible = !_passwordVisible;
-                                  });
-                                },
-                                icon: Icon(
-                                  _passwordVisible
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
-                                ),
-                              )),
-                          obscureText: !_passwordVisible,
-                          validator: (String? value) {
-                            if (value == null || value.isEmpty) {
-                              return "Error! password cannot be empty";
-                            } else if (value.length < 8) {
-                              return "Password must be of atleast 8 characters in length";
-                            }
-                            return null;
-                          },
+                        PasswordTextField(
+                          textEditingController: password,
                         ),
                         SizedBox(
                           width: 0,
@@ -154,71 +118,33 @@ class _SignUpState extends State<SignUp> {
                           width: 0,
                           height: 10,
                         ),
-                        TextFormField(
-                          controller: confirmPassword,
-                          decoration:
-                              InputDecoration(
-                              hintText: 'Enter password',
-                              suffixIcon: IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _confirmPasswordvisible =
-                                        !_confirmPasswordvisible;
-                                  });
-                                },
-                                icon: Icon(
-                                  _confirmPasswordvisible
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
-                                ),
-                              )),
-                          obscureText: !_confirmPasswordvisible,
-                          validator: (String? value) {
-                            if (value == null || value.isEmpty) {
-                              return "Error! password cannot be empty";
-                            } else if (value != password.text) {
-                              return "Error! Please enter same password as above";
-                            }
-                            return null;
-                          },
+                        PasswordTextField(
+                          textEditingController: confirmPassword,
+                          isConfirmPassword: true,
+                          passwordController: password,
                         ),
                       ],
                     ),
                   ),
                   SizedBox(
                     width: 0,
-                    height: 50,
+                    height: 80,
                   ),
                   //button for login
-                  InkWell(
-                    onTap: () async {
-                      if (formKey.currentState!.validate()) {
-                        AuthService().signUp({
-                          "username": username.text.trim(),
-                          "email": email.text.trim(),
-                          "password": password.text.trim()
-                        }, context);
-                      }
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      decoration: ShapeDecoration(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(4),
-                          ),
+                  userProvider.isLoading
+                      ? ProgressIndicatorButton()
+                      : SubmitButton(
+                          buttonText: 'Sign Up',
+                          onTap: () async {
+                            if (formKey.currentState!.validate()) {
+                              AuthService().signUp({
+                                "username": username.text.trim(),
+                                "email": email.text.trim(),
+                                "password": password.text.trim()
+                              }, context);
+                            }
+                          },
                         ),
-                        color: AppConstants.primaryColor,
-                      ),
-                      child: userProvider.isLoading
-                          ? Center(
-                              child: progressIndicator(),
-                            )
-                          : const Text('Sign Up'),
-                    ),
-                  ),
                   const SizedBox(
                     height: 12,
                   ),

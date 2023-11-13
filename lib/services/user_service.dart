@@ -50,6 +50,40 @@ class UserService {
     }
   }
 
+  void updateUserDetails(
+      BuildContext context, Map<String, dynamic> data) async {
+    final UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
+    final AppProvider appProvider =
+        Provider.of<AppProvider>(context, listen: false);
+
+    userProvider.setLoader(true);
+    try {
+      final Response dioResponse = await apiClient.put(
+        "/user_management/user/update_profile",
+        options: getAuthHeaders(context),
+        data: data,
+      );
+      final user = User.fromJson(dioResponse.data["user"]);
+      userProvider.setUser(user);
+      Navigator.of(
+        appProvider.globalNavigator!.currentContext ?? context,
+      ).pop();
+      userProvider.setLoader(false);
+    } on DioException catch (dioError) {
+      userProvider.setLoader(false);
+      debugPrint("=========== update user details error block ==============");
+      apiSnackbar(
+        appProvider.globalNavigator!.currentContext ?? context,
+        dioError,
+      );
+    } catch (err) {
+      userProvider.setLoader(false);
+      debugPrint("=========== update user details catch block ==============");
+      debugPrint("=========== $err ==============");
+    }
+  }
+
   void followRequestList(BuildContext context) async {
     final UserProvider userProvider =
         Provider.of<UserProvider>(context, listen: false);

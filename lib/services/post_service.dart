@@ -52,7 +52,7 @@ class PostService {
 
   void getPresingedUrl(
       Map<String, dynamic> data, File file, BuildContext context,
-      {String? description}) async {
+      {Function(String s3Key)? callback}) async {
     final PostsProvider postsProvider =
         Provider.of<PostsProvider>(context, listen: false);
     final AppProvider appProvider =
@@ -70,17 +70,21 @@ class PostService {
       //upload to s3
       final dio = Dio();
       if (attachment.s3Key != null && attachment.s3Url != null) {
-        await dio.put(attachment.s3Url.toString(),
-            data: file.readAsBytesSync(),
-            options: Options(headers: {
+        await dio.put(
+          attachment.s3Url.toString(),
+          data: file.readAsBytesSync(),
+          options: Options(
+            headers: {
               'Accept': "*/*",
               'Content-Length': file.lengthSync().toString(),
               'Connection': 'keep-alive',
               'Content-Type': 'image/${data['file_type']}'
-            }));
-        uploadAttachment(
-            attachment, appProvider.globalNavigator!.currentContext ?? context,
-            description: description);
+            },
+          ),
+        );
+        if (callback != null) {
+          callback(attachment.s3Key ?? "");
+        }
       } else {
         throw ("Something went wrong! Please try again");
       }
@@ -99,8 +103,7 @@ class PostService {
     }
   }
 
-  void uploadAttachment(Attachment? attachment, BuildContext context,
-      {String? description}) async {
+  void uploadPost(Map<String, dynamic> data, BuildContext context) async {
     final PostsProvider postsProvider =
         Provider.of<PostsProvider>(context, listen: false);
     final AppProvider appProvider =
@@ -112,7 +115,7 @@ class PostService {
       final Response dioResponse = await apiClient.post(
           "/attachment_management/upload_attachment",
           options: getAuthHeaders(context),
-          data: {"s3_key": attachment?.s3Key, "description": description});
+          data: data);
       Post? post = Post.fromJson(dioResponse.data);
 
       if (post != null) {
@@ -127,14 +130,14 @@ class PostService {
               MaterialPageRoute(builder: (context) => HomePage(page: 4)));
     } on DioException catch (dioError) {
       postsProvider.setLoader(false);
-      debugPrint("=========== upload attachment error block ==============");
+      debugPrint("=========== upload post error block ==============");
       apiSnackbar(
         appProvider.globalNavigator!.currentContext ?? context,
         dioError,
       );
     } catch (err) {
       postsProvider.setLoader(false);
-      debugPrint("=========== upload attachment catch block ==============");
+      debugPrint("=========== upload post catch block ==============");
       debugPrint("=========== $err ==============");
     }
   }

@@ -37,16 +37,16 @@ pickFile(ImageSource imageSource) async {
   }
 }
 
-Widget progressIndicator() {
+Widget progressIndicator({Color? color, double? size}) {
   return Transform.scale(
     scale: 1,
     child: Center(
       child: SizedBox(
-        height: 40,
-        width: 40,
+        height: size ?? 40,
+        width: size ?? 40,
         child: CircularProgressIndicator(
           strokeWidth: 3,
-          color: AppConstants.primaryColor,
+          color: color ?? AppConstants.primaryColor,
         ),
       ),
     ),
@@ -54,10 +54,10 @@ Widget progressIndicator() {
 }
 
 class SmallThemeButton extends StatelessWidget {
-  String? buttonText;
-  Function? onTap;
-  Color? buttonBGColor;
-  SmallThemeButton({
+  final String? buttonText;
+  final Function? onTap;
+  final Color? buttonBGColor;
+  const SmallThemeButton({
     super.key,
     this.buttonText,
     this.onTap,
@@ -92,14 +92,73 @@ apiSnackbar(BuildContext context, DioException dioError) {
   debugPrint("=========== error: ${errorResponse?.data} ==============");
 
   if (dioError.type == DioExceptionType.badResponse) {
-    ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+    if (errorResponse?.data.containsKey("message")) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content:
+              Text(errorResponse?.data["message"] ?? "Something went wrong")));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content:
             Text(errorResponse?.data.toString() ?? "Something went wrong")));
+    }
   } else {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content:
             Text(errorResponse?.data["message"] ?? "Something went wrong")));
+  }
+}
+
+class SubmitButton extends StatelessWidget {
+  final String? buttonText;
+  final Function? onTap;
+  const SubmitButton({
+    super.key,
+    required this.buttonText,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => onTap!(),
+      child: Container(
+        width: double.infinity,
+        alignment: Alignment.center,
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        decoration: ShapeDecoration(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(4),
+            ),
+          ),
+          color: Colors.pink[100],
+        ),
+        child: Text(buttonText ?? ""),
+      ),
+    );
+  }
+}
+
+class ProgressIndicatorButton extends StatelessWidget {
+  const ProgressIndicatorButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      alignment: Alignment.center,
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      decoration: ShapeDecoration(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(4),
+          ),
+        ),
+        color: Colors.pink[100],
+      ),
+      child: Center(
+        child: progressIndicator(color: Colors.white, size: 20),
+      ),
+    );
   }
 }
