@@ -19,6 +19,7 @@ class PostService {
 
     postsProvider.setLoader(true);
     try {
+      postsProvider.setFollowerPosts(null);
       //58977
       final Response dioResponse = await apiClient.get(
         "/post_management/posts",

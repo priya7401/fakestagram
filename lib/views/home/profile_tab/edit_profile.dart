@@ -105,25 +105,9 @@ class _EditProfileState extends State<EditProfile> {
                         );
                       });
                 },
-                child: CircleAvatar(
-                  radius: 52,
-                  backgroundColor: Colors.white,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(50),
-                    child: image != null
-                        ? Image.file(
-                            image!,
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
-                          )
-                        : CachedNetworkImage(
-                            imageUrl: profilePicUrl,
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
-                          ),
-                  ),
+                child: profilePicWidget(
+                  image: image,
+                  s3Url: userProvider.user?.profilePic?.s3Url,
                 ),
               ),
               SizedBox(
@@ -176,12 +160,6 @@ class _EditProfileState extends State<EditProfile> {
                         isRequired: false,
                       ),
                     ),
-                    // EditProfileTextfield(
-                    //   title: 'Password',
-                    //   textfieldWidget: PasswordTextField(
-                    //     textEditingController: password,
-                    //   ),
-                    // ),
                     EditProfileTextfield(
                       title: 'Account',
                       textfieldWidget: SwitchListTile(
@@ -289,6 +267,3 @@ class EditProfileTextfield extends StatelessWidget {
     );
   }
 }
-
-String profilePicUrl =
-    "https://media.istockphoto.com/id/909772478/photo/brown-teddy-bear-isolated-in-front-of-a-white-background.jpg?s=612x612&w=0&k=20&c=F4252bOrMfRTB8kWm2oM2jlb9JXY08tKCaO5G_ms1Uw=";

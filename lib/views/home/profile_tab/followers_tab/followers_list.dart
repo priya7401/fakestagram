@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fakestagram/providers/user_provider.dart';
 import 'package:fakestagram/services/services.dart';
 import 'package:fakestagram/utils/global_widgets.dart';
@@ -34,10 +33,9 @@ class FollowersList extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             children: userProvider.followers?.map((follower) {
                   return ListTile(
-                    leading: CircleAvatar(
-                      radius: 30,
-                      backgroundImage:
-                          CachedNetworkImageProvider(profilePicUrl),
+                    leading: profilePicWidget(
+                      radius: 23,
+                      s3Url: userProvider.user?.profilePic?.s3Url,
                     ),
                     title: Text(follower.username ?? "N/A"),
                     trailing: SmallThemeButton(
@@ -62,12 +60,10 @@ class FollowersList extends StatelessWidget {
                                         height: 15,
                                       ),
                                       ListTile(
-                                        leading: CircleAvatar(
-                                          radius: 30,
-                                          backgroundImage:
-                                              CachedNetworkImageProvider(
-                                                  profilePicUrl),
-                                        ),
+                                        leading: profilePicWidget(
+                                            radius: 23,
+                                            s3Url: userProvider
+                                                .user?.profilePic?.s3Url),
                                         title: Text('Remove Follower?'),
                                         subtitle: Padding(
                                           padding:
@@ -120,6 +116,3 @@ class FollowersList extends StatelessWidget {
     });
   }
 }
-
-String profilePicUrl =
-    "https://media.istockphoto.com/id/909772478/photo/brown-teddy-bear-isolated-in-front-of-a-white-background.jpg?s=612x612&w=0&k=20&c=F4252bOrMfRTB8kWm2oM2jlb9JXY08tKCaO5G_ms1Uw=";

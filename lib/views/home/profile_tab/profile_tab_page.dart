@@ -63,9 +63,9 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  CircleAvatar(
+                  profilePicWidget(
+                    s3Url: userProvider.user?.profilePic?.s3Url,
                     radius: 30,
-                    backgroundImage: CachedNetworkImageProvider(profilePicUrl),
                   ),
                   Column(
                     children: [
@@ -137,7 +137,8 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
               ),
               postProvider.isLoading
                   ? progressIndicator()
-                  : GridView(
+                  : (postProvider.posts?.isNotEmpty ?? false)
+                      ? GridView(
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 3,
@@ -165,7 +166,10 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                                 : Text('Image not available');
                           }).toList() ??
                           [],
-                    ),
+                        )
+                      : Center(
+                          child: Text('No posts yet!'),
+                        ),
             ],
           ),
         ),
@@ -173,6 +177,3 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
     });
   }
 }
-
-String profilePicUrl =
-    "https://media.istockphoto.com/id/909772478/photo/brown-teddy-bear-isolated-in-front-of-a-white-background.jpg?s=612x612&w=0&k=20&c=F4252bOrMfRTB8kWm2oM2jlb9JXY08tKCaO5G_ms1Uw=";

@@ -1,5 +1,5 @@
-import 'package:fakestagram/models/models.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:fakestagram/models/models.dart';
 
 part 'user.g.dart';
 
@@ -25,6 +25,9 @@ class User {
 
   @JsonKey(name: "full_name")
   String? fullName;
+
+  @JsonKey(name: "profile_pic")
+  Attachment? profilePic;
 
   String? email;
 

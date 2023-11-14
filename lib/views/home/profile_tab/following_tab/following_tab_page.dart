@@ -20,10 +20,9 @@ class FollowingPage extends StatelessWidget {
                   padding: EdgeInsets.symmetric(vertical: 10),
                   children: userProvider.following?.map((user) {
                         return ListTile(
-                          leading: CircleAvatar(
-                            radius: 30,
-                            backgroundImage:
-                                CachedNetworkImageProvider(profilePicUrl),
+                          leading: profilePicWidget(
+                            radius: 23,
+                            s3Url: userProvider.user?.profilePic?.s3Url,
                           ),
                           title: Text(user.username ?? "N/A"),
                           trailing: ElevatedButton(
@@ -41,12 +40,10 @@ class FollowingPage extends StatelessWidget {
                                       scrollable: true,
                                       content: Column(
                                         children: [
-                                          CircleAvatar(
-                                            radius: 30,
-                                            backgroundImage:
-                                                CachedNetworkImageProvider(
-                                                    profilePicUrl),
-                                          ),
+                                          profilePicWidget(
+                                              radius: 23,
+                                              s3Url: userProvider
+                                                  .user?.profilePic?.s3Url),
                                           SizedBox(
                                             height: 10,
                                           ),
@@ -112,6 +109,3 @@ class FollowingPage extends StatelessWidget {
     });
   }
 }
-
-String profilePicUrl =
-    "https://media.istockphoto.com/id/909772478/photo/brown-teddy-bear-isolated-in-front-of-a-white-background.jpg?s=612x612&w=0&k=20&c=F4252bOrMfRTB8kWm2oM2jlb9JXY08tKCaO5G_ms1Uw=";

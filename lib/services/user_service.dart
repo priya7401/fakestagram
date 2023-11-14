@@ -17,6 +17,7 @@ class UserService {
 
     userProvider.setLoader(true);
     try {
+      userProvider.setFollower(null);
       final Response dioResponse = await apiClient.get(
         "/user_management/user/user_details",
         options: getAuthHeaders(context),

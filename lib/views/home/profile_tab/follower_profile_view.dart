@@ -55,10 +55,9 @@ class _ProfileViewState extends State<ProfileView> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      CircleAvatar(
+                      profilePicWidget(
+                        s3Url: userProvider.follower?.profilePic?.s3Url,
                         radius: 30,
-                        backgroundImage:
-                            CachedNetworkImageProvider(profilePicUrl),
                       ),
                       Column(
                         children: [
@@ -112,12 +111,15 @@ class _ProfileViewState extends State<ProfileView> {
                       ),
                     ],
                   ),
+                  SizedBox(
+                    height: 10,
+                  ),
                   Text(
                     userProvider.follower?.fullName ?? "N/A",
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                   ),
                   SizedBox(
-                    height: 5,
+                    height: 10,
                   ),
                   Text(
                     userProvider.follower?.bio ?? "",
@@ -125,6 +127,16 @@ class _ProfileViewState extends State<ProfileView> {
                   SizedBox(
                     height: 15,
                   ),
+                  userProvider.isLoading == false &&
+                          userProvider.follower?.isPublic == false
+                      ? Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Center(
+                            child: Text(
+                                'This account is private. Follow user to see posts'),
+                          ),
+                        )
+                      : Container(),
                   postProvider.isLoading
                       ? progressIndicator()
                       : (postProvider.followerPosts?.isNotEmpty ?? false)
@@ -158,9 +170,7 @@ class _ProfileViewState extends State<ProfileView> {
                                   }).toList() ??
                                   [],
                             )
-                          : Center(
-                              child: Text('No posts yet!'),
-                            ),
+                          : Container(),
                 ],
               ),
               userProvider.isLoading
@@ -175,9 +185,3 @@ class _ProfileViewState extends State<ProfileView> {
     });
   }
 }
-
-String bio =
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in quam quam. ";
-
-String profilePicUrl =
-    "https://media.istockphoto.com/id/909772478/photo/brown-teddy-bear-isolated-in-front-of-a-white-background.jpg?s=612x612&w=0&k=20&c=F4252bOrMfRTB8kWm2oM2jlb9JXY08tKCaO5G_ms1Uw=";

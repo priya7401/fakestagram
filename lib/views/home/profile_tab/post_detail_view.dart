@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fakestagram/providers/providers.dart';
 import 'package:fakestagram/services/services.dart';
+import 'package:fakestagram/utils/global_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -40,9 +41,9 @@ class ProfilePostsDetailView extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            CircleAvatar(
-                              radius: 20,
-                              backgroundImage: CachedNetworkImageProvider(profilePicUrl),
+                            profilePicWidget(
+                              s3Url: userProvider.user?.profilePic?.s3Url,
+                              radius: 28,
                             ),
                             SizedBox(
                               width: 10,
@@ -190,6 +191,3 @@ String getCreatedAt(String createdAt) {
     return timeago.format(date);
   }
 }
-
-String profilePicUrl =
-    "https://media.istockphoto.com/id/909772478/photo/brown-teddy-bear-isolated-in-front-of-a-white-background.jpg?s=612x612&w=0&k=20&c=F4252bOrMfRTB8kWm2oM2jlb9JXY08tKCaO5G_ms1Uw=";

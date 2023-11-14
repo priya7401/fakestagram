@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:fakestagram/utils/app_constants.dart';
 import 'package:flutter/material.dart';
@@ -92,14 +93,15 @@ apiSnackbar(BuildContext context, DioException dioError) {
   debugPrint("=========== error: ${errorResponse?.data} ==============");
 
   if (dioError.type == DioExceptionType.badResponse) {
-    if (errorResponse?.data.containsKey("message")) {
+    if (errorResponse?.data is Map &&
+        errorResponse?.data.containsKey("message")) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content:
               Text(errorResponse?.data["message"] ?? "Something went wrong")));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content:
-            Text(errorResponse?.data.toString() ?? "Something went wrong")));
+          content:
+              Text(errorResponse?.data.toString() ?? "Something went wrong")));
     }
   } else {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -161,4 +163,36 @@ class ProgressIndicatorButton extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget profilePicWidget({
+  File? image,
+  String? s3Url,
+  double? radius,
+}) {
+  return CircleAvatar(
+    radius: radius ?? 52,
+    backgroundColor: Colors.white,
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(50),
+      child: image != null
+          ? Image.file(
+              image!,
+              width: 100,
+              height: 100,
+              fit: BoxFit.cover,
+            )
+          : s3Url != null
+              ? CachedNetworkImage(
+                  imageUrl: s3Url,
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
+                )
+              : Icon(
+                  Icons.account_circle_rounded,
+                  size: radius != null ? radius * 2 : 100,
+                ),
+    ),
+  );
 }
