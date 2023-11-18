@@ -18,3 +18,5 @@ MaterialColor swatchify(MaterialColor color, int value) {
     900: color[value]!,
   });
 }
+
+enum AppScreens { singIn }

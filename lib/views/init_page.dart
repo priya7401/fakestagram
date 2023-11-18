@@ -14,7 +14,8 @@ class InitPage extends StatelessWidget {
         body: SafeArea(
             child: userProvider.user != null && userProvider.user?.id != null
                 ? const HomePage()
-                : const SignIn()),
+              : const SignIn(),
+        ),
       );
     });
   }

@@ -34,6 +34,8 @@ class UserService {
       } else {
         final user = User.fromJson(dioResponse.data["user"]);
         userProvider.setFollower(user);
+        appProvider.setPrefsUser(dioResponse.data["user"]);
+        appProvider.setPrefsToken(dioResponse.data["token"]);
       }
 
       userProvider.setLoader(false);

@@ -1,9 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fakestagram/models/post/post.dart';
 import 'package:fakestagram/providers/posts_provider.dart';
+import 'package:fakestagram/providers/providers.dart';
 import 'package:fakestagram/providers/user_provider.dart';
 import 'package:fakestagram/services/services.dart';
+import 'package:fakestagram/utils/app_constants.dart';
 import 'package:fakestagram/utils/global_widgets.dart';
+import 'package:fakestagram/views/auth/sign_in.dart';
 import 'package:fakestagram/views/home/home_page.dart';
 import 'package:fakestagram/views/home/profile_tab/edit_profile.dart';
 import 'package:fakestagram/views/home/profile_tab/post_detail_view.dart';
@@ -21,8 +24,8 @@ class ProfileTabPage extends StatefulWidget {
 class _ProfileTabPageState extends State<ProfileTabPage> {
   @override
   Widget build(BuildContext context) {
-    return Consumer2<UserProvider, PostsProvider>(
-        builder: (context, userProvider, postProvider, child) {
+    return Consumer3<UserProvider, PostsProvider, AppProvider>(
+        builder: (context, userProvider, postProvider, appProvider, child) {
       return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -52,6 +55,18 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                         )));
               },
               icon: Icon(Icons.menu_rounded),
+            ),
+            IconButton(
+              onPressed: () {
+                AuthService().logout(context);
+                if (appProvider.currScreen != AppScreens.singIn.name) {
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => SignIn()),
+                      (route) => false);
+                  appProvider.setCurrScreen(AppScreens.singIn.name);
+                }
+              },
+              icon: Icon(Icons.logout_rounded),
             )
           ],
         ),
@@ -139,33 +154,33 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                   ? progressIndicator()
                   : (postProvider.posts?.isNotEmpty ?? false)
                       ? GridView(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        crossAxisSpacing: 3,
-                        mainAxisSpacing: 3,
-                        childAspectRatio: 1,
-                      ),
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      children: postProvider.posts?.map((Post post) {
-                            return post.attachment?.s3Url != null
-                                ? InkWell(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ProfilePostsDetailView()));
-                                    },
-                                    child: Image(
-                                      image: CachedNetworkImageProvider(
-                                          post.attachment?.s3Url ?? ""),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  )
-                                : Text('Image not available');
-                          }).toList() ??
-                          [],
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 3,
+                            mainAxisSpacing: 3,
+                            childAspectRatio: 1,
+                          ),
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          children: postProvider.posts?.map((Post post) {
+                                return post.attachment?.s3Url != null
+                                    ? InkWell(
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ProfilePostsDetailView()));
+                                        },
+                                        child: Image(
+                                          image: CachedNetworkImageProvider(
+                                              post.attachment?.s3Url ?? ""),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      )
+                                    : Text('Image not available');
+                              }).toList() ??
+                              [],
                         )
                       : Center(
                           child: Text('No posts yet!'),

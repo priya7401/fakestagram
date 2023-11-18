@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
+import 'package:fakestagram/services/auth_service.dart';
 import 'package:fakestagram/utils/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -91,6 +92,13 @@ apiSnackbar(BuildContext context, DioException dioError) {
   debugPrint(
       "=========== statusCode: ${errorResponse?.statusCode} ==============");
   debugPrint("=========== error: ${errorResponse?.data} ==============");
+
+  if (dioError.response != null) {
+    if (dioError.response?.statusCode == 401) {
+      AuthService().forceLogout(context);
+      return;
+    }
+  }
 
   if (dioError.type == DioExceptionType.badResponse) {
     if (errorResponse?.data is Map &&
