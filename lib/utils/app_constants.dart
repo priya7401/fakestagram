@@ -20,3 +20,5 @@ MaterialColor swatchify(MaterialColor color, int value) {
 }
 
 enum AppScreens { singIn, home }
+
+enum PostDetailView { feed, user, follower }

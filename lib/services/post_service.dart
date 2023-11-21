@@ -173,19 +173,42 @@ class PostService {
   }
 
   void likeDislikePost(
-      Map<String, dynamic> queryParams, BuildContext context) async {
+    Map<String, dynamic> queryParams, BuildContext context,
+      {String? user}) async {
     final PostsProvider postsProvider =
         Provider.of<PostsProvider>(context, listen: false);
     final AppProvider appProvider =
         Provider.of<AppProvider>(context, listen: false);
+    final UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
 
     postsProvider.setLoader(true);
     try {
       //58977
-      await apiClient.put("/post_management/posts/like",
-          queryParameters: queryParams, options: getAuthHeaders(context));
+      await apiClient.put(
+        "/post_management/posts/like",
+        queryParameters: queryParams,
+        options: getAuthHeaders(context),
+      );
 
-      getPosts(appProvider.globalNavigator!.currentContext ?? context);
+      if (user != null) {
+        switch (user) {
+          case "feed":
+            getFeed(appProvider.globalNavigator!.currentContext ?? context);
+            break;
+          case "user":
+            getPosts(appProvider.globalNavigator!.currentContext ?? context);
+            break;
+          case "follower":
+            getPosts(
+              appProvider.globalNavigator!.currentContext ?? context,
+              followerId: userProvider.follower?.id,
+            );
+            break;
+        }
+      } else {
+        getPosts(appProvider.globalNavigator!.currentContext ?? context);
+      }
       postsProvider.setLoader(false);
     } on DioException catch (dioError) {
       postsProvider.setLoader(false);

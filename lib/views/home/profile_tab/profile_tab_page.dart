@@ -169,9 +169,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                                               MaterialPageRoute(
                                                   builder: (context) =>
                                                       PostsDetailView(
-                                                        posts:
-                                                            postProvider.posts,
-                                                        isUserPosts: true,
+                                                        user: PostDetailView.user.name,
                                                       )));
                                         },
                                         child: Image(

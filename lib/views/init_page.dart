@@ -11,11 +11,9 @@ class InitPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<UserProvider>(builder: (context, userProvider, child) {
       return Scaffold(
-        body: SafeArea(
-            child: userProvider.user != null && userProvider.user?.id != null
-                ? const HomePage()
-              : const SignIn(),
-        ),
+        body: userProvider.user != null && userProvider.user?.id != null
+            ? const HomePage()
+            : const SignIn(),
       );
     });
   }

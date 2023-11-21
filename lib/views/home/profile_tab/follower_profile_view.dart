@@ -2,8 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fakestagram/models/post/post.dart';
 import 'package:fakestagram/providers/posts_provider.dart';
 import 'package:fakestagram/providers/user_provider.dart';
+import 'package:fakestagram/utils/app_constants.dart';
 import 'package:fakestagram/utils/global_widgets.dart';
 import 'package:fakestagram/views/home/home_page.dart';
+import 'package:fakestagram/views/home/profile_tab/post_detail_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -128,7 +130,10 @@ class _ProfileViewState extends State<ProfileView> {
                     height: 15,
                   ),
                   userProvider.isLoading == false &&
-                          userProvider.follower?.isPublic == false
+                          userProvider.follower?.isPublic == false &&
+                          !(userProvider.user?.following
+                                  ?.contains(userProvider.follower?.id) ??
+                              false)
                       ? Padding(
                           padding: const EdgeInsets.all(15.0),
                           child: Center(
@@ -155,10 +160,13 @@ class _ProfileViewState extends State<ProfileView> {
                                     return post.attachment?.s3Url != null
                                         ? InkWell(
                                             onTap: () {
-                                              // Navigator.of(context).push(
-                                              //     MaterialPageRoute(
-                                              //         builder: (context) =>
-                                              //             ProfilePostsDetailView()));
+                                              Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          PostsDetailView(
+                                                            user: PostDetailView
+                                                                .follower.name,
+                                                          )));
                                             },
                                             child: Image(
                                               image: CachedNetworkImageProvider(

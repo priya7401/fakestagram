@@ -37,7 +37,8 @@ class _MyAppState extends State<MyApp> {
   }
 
   void setPrefsData() async {
-    final prefs = await SharedPreferences.getInstance();
+    Future.delayed(const Duration(seconds: 1), () async {
+      final prefs = await SharedPreferences.getInstance();
     final AppProvider appProvider =
         Provider.of<AppProvider>(context, listen: false);
     final UserProvider userProvider = Provider.of<UserProvider>(
@@ -57,10 +58,10 @@ class _MyAppState extends State<MyApp> {
         UserService().getUserDetails(
             appProvider.globalNavigator!.currentContext ?? context);
         PostService()
-            .getFeed(appProvider.globalNavigator!.currentContext ?? context);
-
+              .getFeed(appProvider.globalNavigator!.currentContext ?? context);
       }
     }
+    });
   }
 
   @override

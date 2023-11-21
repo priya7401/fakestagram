@@ -49,8 +49,7 @@ class _HomePageState extends State<HomePage> {
           },
           children: [
             PostsDetailView(
-              posts: postProvider.feed,
-              isUserPosts: false,
+              user: PostDetailView.feed.name,
             ),
             Text('search screen'),
             AddPost(),

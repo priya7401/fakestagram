@@ -2,43 +2,55 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fakestagram/models/models.dart';
 import 'package:fakestagram/providers/providers.dart';
 import 'package:fakestagram/services/services.dart';
+import 'package:fakestagram/utils/app_constants.dart';
 import 'package:fakestagram/utils/global_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PostsDetailView extends StatelessWidget {
-  final List<Post>? posts;
-  final bool? isUserPosts;
+  final String user;
   const PostsDetailView({
     super.key,
-    this.posts,
-    this.isUserPosts = true,
+    required this.user,
   });
 
   @override
   Widget build(BuildContext context) {
     Size dim = MediaQuery.of(context).size;
+    List<Post>? posts;
 
     return Consumer2<UserProvider, PostsProvider>(
         builder: (context, userProvider, postProvider, child) {
+
+      switch (user) {
+        case "feed":
+          posts = postProvider.feed;
+          break;
+        case "user":
+          posts = postProvider.posts;
+          break;
+        case "follower":
+          posts = postProvider.followerPosts;
+          break;
+      }
       return Scaffold(
           appBar: AppBar(
               centerTitle: false,
-              title: isUserPosts == true
+              title: user == PostDetailView.feed.name
                   ? Text(
+                      'Fakestagram',
+                      style: TextStyle(fontSize: 20),
+                      textAlign: TextAlign.center,
+                    )
+                  : Text(
                       "Posts",
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.center,
-                    )
-                  : Text(
-                      'Fakestagram',
-                      style: TextStyle(fontSize: 20),
-                      textAlign: TextAlign.center,
                     ),
-              leading: isUserPosts == true
+              leading: user == PostDetailView.user.name
                   ? IconButton(
                       onPressed: () {
                         Navigator.of(context).pop();
@@ -46,7 +58,7 @@ class PostsDetailView extends StatelessWidget {
                       icon: const Icon(Icons.arrow_back),
                     )
                   : null,
-              actions: isUserPosts == false
+              actions: user == PostDetailView.feed.name
                   ? [
                       IconButton(
                         onPressed: () {},
@@ -74,7 +86,7 @@ class PostsDetailView extends StatelessWidget {
                                     padding: const EdgeInsets.only(
                                         left: 5, bottom: 8),
                                     child: profilePicWidget(
-                                      s3Url: isUserPosts == true
+                                      s3Url: user == PostDetailView.user.name
                                           ? userProvider.user?.profilePic?.s3Url
                                           : post.userDetails?.profilePic?.s3Url,
                                       radius: 26,
@@ -84,12 +96,12 @@ class PostsDetailView extends StatelessWidget {
                                     width: 10,
                                   ),
                                   Text(
-                                    isUserPosts == true
+                                    user == PostDetailView.user.name
                                         ? userProvider.user?.username ?? "N/A"
-                                        : post.userDetails?.username ?? " N/A",
+                                        : post.userDetails?.username ?? "N/A",
                                     style: TextStyle(fontSize: 16),
                                   ),
-                                  isUserPosts == true
+                                  user == PostDetailView.user.name
                                       ? Expanded(
                                           child: IconButton(
                                             alignment: Alignment.centerRight,
@@ -152,6 +164,7 @@ class PostsDetailView extends StatelessWidget {
                                           PostService().likeDislikePost(
                                             {"post_id": post.id.toString()},
                                             context,
+                                            user: user,
                                           );
                                         },
                                         child: Padding(
@@ -239,7 +252,7 @@ class PostsDetailView extends StatelessWidget {
                           );
                         }).toList() ??
                         [
-                          isUserPosts == true
+                          user == PostDetailView.user.name
                               ? Text('No posts yet!')
                               : Text(
                                   'No feed available at the moment.',
@@ -250,4 +263,5 @@ class PostsDetailView extends StatelessWidget {
           ));
     });
   }
+
 }
