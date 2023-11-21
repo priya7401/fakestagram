@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:fakestagram/services/dio_client.dart';
 import 'package:fakestagram/models/models.dart';
 import 'package:fakestagram/providers/providers.dart';
+import 'package:fakestagram/services/post_service.dart';
 import 'package:fakestagram/utils/app_constants.dart';
 import 'package:fakestagram/utils/global_widgets.dart';
 import 'package:fakestagram/views/auth/sign_in.dart';
@@ -11,6 +12,7 @@ import 'package:provider/provider.dart';
 
 class AuthService {
   final Dio apiClient = dioClient;
+  final PostService postService = PostService();
 
   void signIn(Map<String, dynamic> data, BuildContext context) async {
     final UserProvider userProvider =
@@ -34,6 +36,9 @@ class AuthService {
       await appProvider.setPrefsToken(dioResponse.data["token"]);
       userProvider.setLoader(false);
 
+      postService
+          .getFeed(appProvider.globalNavigator!.currentContext ?? context);
+      appProvider.setCurrScreen(AppScreens.home.name);
       Navigator.of(appProvider.globalNavigator!.currentContext ?? context)
           .pushReplacement(
         MaterialPageRoute(builder: (context) => HomePage()),
@@ -74,6 +79,8 @@ class AuthService {
       appProvider.setPrefsToken(dioResponse.data["token"]);
       userProvider.setLoader(false);
 
+      postService
+          .getFeed(appProvider.globalNavigator!.currentContext ?? context);
       Navigator.of(appProvider.globalNavigator!.currentContext ?? context)
           .pushReplacement(
         MaterialPageRoute(builder: (context) => HomePage()),
@@ -103,7 +110,7 @@ class AuthService {
     userProvider.setLoader(true);
     try {
       //58977
-      await apiClient.post(
+      await apiClient.delete(
         "/user_management/auth/logout",
         options: getAuthHeaders(context),
       );
@@ -141,6 +148,7 @@ class AuthService {
       appProvider.setPrefsToken(null);
       userProvider.setLoader(false);
       if (appProvider.currScreen != AppScreens.singIn.name) {
+        print('///////inside if statement');
         Navigator.of(appProvider.globalNavigator!.currentContext ?? context)
             .pushAndRemoveUntil(
                 MaterialPageRoute(builder: (context) => SignIn()),

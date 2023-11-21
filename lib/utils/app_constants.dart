@@ -19,4 +19,4 @@ MaterialColor swatchify(MaterialColor color, int value) {
   });
 }
 
-enum AppScreens { singIn }
+enum AppScreens { singIn, home }

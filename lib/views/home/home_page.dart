@@ -2,7 +2,7 @@ import 'package:fakestagram/providers/providers.dart';
 import 'package:fakestagram/services/services.dart';
 import 'package:fakestagram/utils/app_constants.dart';
 import 'package:fakestagram/views/home/add_post_tab/add_post.dart';
-import 'package:fakestagram/views/home/home_tab/home_tab_page.dart';
+import 'package:fakestagram/views/home/profile_tab/post_detail_view.dart';
 import 'package:fakestagram/views/home/profile_tab/profile_tab_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +35,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppProvider>(builder: (context, appProvider, child) {
+    return Consumer2<AppProvider, PostsProvider>(
+        builder: (context, appProvider, postProvider, child) {
       return Scaffold(
         body: PageView(
           physics: const NeverScrollableScrollPhysics(),
@@ -46,9 +47,11 @@ class _HomePageState extends State<HomePage> {
               _page = page;
             });
           },
-          children: const [
-            // const Text('feed screen'),
-            HomeTabPage(),
+          children: [
+            PostsDetailView(
+              posts: postProvider.feed,
+              isUserPosts: false,
+            ),
             Text('search screen'),
             AddPost(),
             Text('reels screen'),
@@ -108,6 +111,8 @@ class _HomePageState extends State<HomePage> {
             pageController.jumpToPage(page);
             if (page == 4) {
               PostService().getPosts(context);
+            } else if (page == 0) {
+              PostService().getFeed(context);
             }
           },
         ),

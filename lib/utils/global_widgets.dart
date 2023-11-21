@@ -7,6 +7,8 @@ import 'package:fakestagram/utils/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:timeago/timeago.dart' as timeago;
+import 'package:intl/intl.dart';
 
 pickFile(ImageSource imageSource) async {
   _pickFile() async {
@@ -203,4 +205,13 @@ Widget profilePicWidget({
                 ),
     ),
   );
+}
+
+String getCreatedAt(String createdAt) {
+  DateTime date = DateTime.parse(createdAt);
+  if (DateTime.now().difference(date).inDays >= 1) {
+    return DateFormat("MMM d").format(date);
+  } else {
+    return timeago.format(date);
+  }
 }

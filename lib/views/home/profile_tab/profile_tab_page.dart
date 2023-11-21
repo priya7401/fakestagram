@@ -1,8 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fakestagram/models/post/post.dart';
-import 'package:fakestagram/providers/posts_provider.dart';
 import 'package:fakestagram/providers/providers.dart';
-import 'package:fakestagram/providers/user_provider.dart';
 import 'package:fakestagram/services/services.dart';
 import 'package:fakestagram/utils/app_constants.dart';
 import 'package:fakestagram/utils/global_widgets.dart';
@@ -170,7 +168,11 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                                           Navigator.of(context).push(
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      ProfilePostsDetailView()));
+                                                      PostsDetailView(
+                                                        posts:
+                                                            postProvider.posts,
+                                                        isUserPosts: true,
+                                                      )));
                                         },
                                         child: Image(
                                           image: CachedNetworkImageProvider(

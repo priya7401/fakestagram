@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:fakestagram/models/user.dart';
 import 'package:fakestagram/providers/providers.dart';
-import 'package:fakestagram/services/user_service.dart';
+import 'package:fakestagram/services/services.dart';
 import 'package:fakestagram/utils/app_constants.dart';
 import 'package:fakestagram/views/init_page.dart';
 import 'package:flutter/material.dart';
@@ -56,6 +56,9 @@ class _MyAppState extends State<MyApp> {
         userProvider.setToken(prefToken);
         UserService().getUserDetails(
             appProvider.globalNavigator!.currentContext ?? context);
+        PostService()
+            .getFeed(appProvider.globalNavigator!.currentContext ?? context);
+
       }
     }
   }

@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fakestagram/providers/user_provider.dart';
 import 'package:fakestagram/services/services.dart';
 import 'package:fakestagram/utils/global_widgets.dart';

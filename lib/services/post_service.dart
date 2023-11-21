@@ -153,7 +153,7 @@ class PostService {
     postsProvider.setLoader(true);
     try {
       //58977
-      await apiClient.delete("/post_manamgement/posts",
+      await apiClient.delete("/post_management/posts",
           queryParameters: queryParams, options: getAuthHeaders(context));
 
       getPosts(appProvider.globalNavigator!.currentContext ?? context);
@@ -182,7 +182,7 @@ class PostService {
     postsProvider.setLoader(true);
     try {
       //58977
-      await apiClient.put("/post_manamgement/posts/like",
+      await apiClient.put("/post_management/posts/like",
           queryParameters: queryParams, options: getAuthHeaders(context));
 
       getPosts(appProvider.globalNavigator!.currentContext ?? context);
@@ -197,6 +197,37 @@ class PostService {
     } catch (err) {
       postsProvider.setLoader(false);
       debugPrint("=========== like-dislike post catch block ==============");
+      debugPrint("=========== $err ==============");
+    }
+  }
+
+  void getFeed(BuildContext context) async {
+    final PostsProvider postsProvider =
+        Provider.of<PostsProvider>(context, listen: false);
+    final AppProvider appProvider =
+        Provider.of<AppProvider>(context, listen: false);
+
+    postsProvider.setLoader(true);
+    try {
+      //58977
+      final Response dioResponse = await apiClient.get(
+        "/post_management/feed",
+        options: getAuthHeaders(context),
+      );
+      final posts = PostList.fromJson(dioResponse.data);
+      postsProvider.setFeed(posts.posts);
+
+      postsProvider.setLoader(false);
+    } on DioException catch (dioError) {
+      postsProvider.setLoader(false);
+      debugPrint("=========== get feed list error block ==============");
+      apiSnackbar(
+        appProvider.globalNavigator!.currentContext ?? context,
+        dioError,
+      );
+    } catch (err) {
+      postsProvider.setLoader(false);
+      debugPrint("=========== get feed list catch block ==============");
       debugPrint("=========== $err ==============");
     }
   }

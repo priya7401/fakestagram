@@ -5,15 +5,16 @@ part 'post.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Post {
-  Post(
-      {this.id,
-      this.likes,
-      this.description,
-      this.userId,
-      this.createdAt,
-      this.attachment,
-      this.commentCount,
-      this.userLiked});
+  Post({
+    this.id,
+    this.likes,
+    this.description,
+    this.userId,
+    this.createdAt,
+    this.attachment,
+    this.commentCount,
+    this.userLiked,
+  });
 
   @JsonKey(name: "_id")
   String? id;
@@ -24,6 +25,9 @@ class Post {
 
   @JsonKey(name: "user_id")
   String? userId;
+
+  @JsonKey(name: "user_details")
+  User? userDetails;
 
   @JsonKey(name: "created_at")
   String? createdAt;
