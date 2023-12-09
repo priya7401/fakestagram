@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "956110250494",
+    "project_id": "social-media-app-ac32b",
+    "storage_bucket": "social-media-app-ac32b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:956110250494:android:3ca1997fa2e138f59d20af",
+        "android_client_info": {
+          "package_name": "com.example.fakestagram"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3IHZzUaRQLeyKmQgURpTEtatRwK19lRI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

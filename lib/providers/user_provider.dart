@@ -5,6 +5,7 @@ class UserProvider extends ChangeNotifier {
   User? _user;
   bool? _isLoading = false;
   String? _token;
+  String? _fcmToken;
   List<User>? _followSuggestions;
   List<User>? _followRequests;
   List<User>? _followers;
@@ -14,6 +15,7 @@ class UserProvider extends ChangeNotifier {
   User? get user => _user;
   bool get isLoading => _isLoading ?? false;
   String? get token => _token;
+  String? get fcmToken => _fcmToken;
   List<User>? get followSuggestions => _followSuggestions ?? [];
   List<User>? get followRequests => _followRequests ?? [];
   List<User>? get followers => _followers ?? [];
@@ -32,6 +34,11 @@ class UserProvider extends ChangeNotifier {
 
   void setToken(String? token) {
     _token = token;
+    notifyListeners();
+  }
+
+  void setFcmToken(String? token) {
+    _fcmToken = token;
     notifyListeners();
   }
 
