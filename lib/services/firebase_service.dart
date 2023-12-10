@@ -1,4 +1,5 @@
-import 'package:fakestagram/providers/user_provider.dart';
+import 'package:fakestagram/main.dart';
+import 'package:fakestagram/services/post_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
@@ -6,7 +7,7 @@ class FirebaseService {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   String? token;
 
-  void setupFirebase(UserProvider userProvider) async {
+  void setupFirebase() async {
     final notificationSettings = await messaging.requestPermission(
       alert: true,
       announcement: false,
@@ -18,6 +19,7 @@ class FirebaseService {
     );
     token = await messaging.getToken();
     userProvider.setFcmToken(token);
+    print(">>>>>>>>>> FCM token: $token <<<<<<<<<<<");
 
     _setupFcmNotification();
 
@@ -36,20 +38,24 @@ class FirebaseService {
     RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
 
     if (initialMessage != null) {
-      debugPrint(">>>>>>>>>> FCM Notification received in app killed state <<<<<<<<<<<");
-      handleMessage(initialMessage);
+      print(">>>>>>>>>> FCM Notification received in app killed state <<<<<<<<<<<");
+      if (initialMessage.notification != null) {
+        handleMessage(initialMessage);
+      }
     }
 
     // Also handle any interaction when the app is in the background via a
     // Stream listener
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
-      debugPrint(">>>>>>>>>> FCM Notification received in app background state <<<<<<<<<<<");
-      handleMessage(message);
+      print(">>>>>>>>>> FCM Notification received in app background state <<<<<<<<<<<");
+      if (message.notification != null) {
+        handleMessage(message);
+      }
     });
 
     // To handle messages while your application is in the foreground,
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      debugPrint(">>>>>>>>>> FCM Notification received in app foreground state <<<<<<<<<<<");
+      print(">>>>>>>>>> FCM Notification received in app foreground state <<<<<<<<<<<");
       if (message.notification != null) {
         handleMessage(message);
       }
@@ -57,6 +63,15 @@ class FirebaseService {
   }
 
   void handleMessage(RemoteMessage message) {
-    if (message.data['type'] == 'new_post') {}
+    try {
+      if (message.data['type'] == 'new_post') {
+        PostService().getPostDetails(
+          appProvider.globalNavigator!.currentContext!,
+          message.data["post_id"],
+        );
+      }
+    } catch (err) {
+      print(">>>>>>>>>> FCM handler error: $err <<<<<<<<<<<");
+    }
   }
 }

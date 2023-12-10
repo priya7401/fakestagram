@@ -29,7 +29,7 @@ class UserService {
       //so store data accordingly
       if (followerId == null) {
         userProvider.setUser(user);
-        appProvider.setPrefsUser(user);
+        appProvider.setPrefsUser(dioResponse.data["user"]);
       } else {
         userProvider.setFollower(user);
       }

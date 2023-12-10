@@ -10,13 +10,11 @@ class AppProvider extends ChangeNotifier {
   int _prevTabPage = 0;
   String? _currScreen;
   User? _user;
-  String? _token;
 
   bool get isLoading => _isLoading ?? false;
   int get prevTabPage => _prevTabPage;
   String? get currScreen => _currScreen;
   User? get user => _user;
-  String? get token => _token;
 
   void setLoader(bool? value) {
     _isLoading = value;
@@ -52,7 +50,6 @@ class AppProvider extends ChangeNotifier {
     } else {
       await prefs.setString('token', token);
     }
-    _token = token;
     notifyListeners();
   }
 

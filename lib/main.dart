@@ -15,15 +15,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  // If you're going to use other Firebase services in the background, such as Firestore,
-  // make sure you call `initializeApp` before using other Firebase services.
-  // await Firebase.initializeApp();
   firebaseService.handleMessage(message);
 
   debugPrint("Handling a background message: ${message.messageId}");
 }
 
 FirebaseService firebaseService = FirebaseService();
+final AppProvider appProvider = AppProvider();
+final UserProvider userProvider = UserProvider();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,8 +31,8 @@ Future<void> main() async {
 
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider(create: (context) => UserProvider()),
-      ChangeNotifierProvider(create: (context) => AppProvider()),
+      ChangeNotifierProvider(create: (context) => userProvider),
+      ChangeNotifierProvider(create: (context) => appProvider),
       ChangeNotifierProvider(create: (context) => PostsProvider()),
     ],
     child: const MyApp(),
@@ -57,14 +56,6 @@ class _MyAppState extends State<MyApp> {
   }
 
   void setPrefsData() async {
-    final AppProvider appProvider = Provider.of<AppProvider>(
-      context,
-      listen: false,
-    );
-    final UserProvider userProvider = Provider.of<UserProvider>(
-      appProvider.globalNavigator!.currentContext ?? context,
-      listen: false,
-    );
     try {
       final prefs = await SharedPreferences.getInstance();
 
@@ -77,13 +68,13 @@ class _MyAppState extends State<MyApp> {
           PostService().getFeed(appProvider.globalNavigator!.currentContext ?? context);
         }
       }
-    if (prefs.containsKey('user')) {
-      final prefUser = prefs.getString('user');
-      if (prefUser != null && prefUser != '') {
-        userProvider.setUser(User.fromJson(jsonDecode(prefUser)));
+      if (prefs.containsKey('user')) {
+        final prefUser = prefs.getString('user');
+        if (prefUser != null && prefUser != '') {
+          userProvider.setUser(User.fromJson(jsonDecode(prefUser)));
+        }
       }
-      }
-      firebaseService.setupFirebase(userProvider);
+      firebaseService.setupFirebase();
       appProvider.setLoader(false);
     } catch (err) {
       appProvider.setLoader(false);
@@ -105,7 +96,9 @@ class _MyAppState extends State<MyApp> {
           ),
           buttonTheme: ButtonThemeData(buttonColor: AppConstants.primaryColor),
           elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ElevatedButton.styleFrom(backgroundColor: AppConstants.primaryColor),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppConstants.primaryColor,
+            ),
           ),
         ),
         home: const InitPage(),

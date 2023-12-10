@@ -156,11 +156,9 @@ class AuthService {
   }
 
   void sendDeviceId(BuildContext context) async {
-    final AppProvider appProvider = Provider.of<AppProvider>(context, listen: false);
     final UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
       if (userProvider.token != null && userProvider.token?.isNotEmpty == true) {
-        print('/////////fcm token: ${userProvider.fcmToken}');
         await apiClient.post(
           "/user_management/auth/device",
           options: getAuthHeaders(context),
