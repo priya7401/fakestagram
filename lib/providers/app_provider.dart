@@ -6,16 +6,23 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AppProvider extends ChangeNotifier {
   GlobalKey<NavigatorState>? globalNavigator = GlobalKey<NavigatorState>();
+  bool? _isLoading = false;
   int _prevTabPage = 0;
   String? _currScreen;
   User? _user;
   String? _token;
 
+  bool get isLoading => _isLoading ?? false;
   int get prevTabPage => _prevTabPage;
   String? get currScreen => _currScreen;
   User? get user => _user;
   String? get token => _token;
 
+  void setLoader(bool? value) {
+    _isLoading = value;
+    notifyListeners();
+  }
+  
   void setPrevTabPage(page) {
     _prevTabPage = page;
     notifyListeners();

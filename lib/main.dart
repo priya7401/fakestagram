@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.
   // await Firebase.initializeApp();
@@ -24,7 +25,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 FirebaseService firebaseService = FirebaseService();
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -51,32 +52,43 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      final AppProvider appProvider =
-        Provider.of<AppProvider>(context, listen: false);
-      final prefs = await SharedPreferences.getInstance();
+      setPrefsData();
+    });
+  }
 
+  void setPrefsData() async {
+    final AppProvider appProvider = Provider.of<AppProvider>(
+      context,
+      listen: false,
+    );
     final UserProvider userProvider = Provider.of<UserProvider>(
       appProvider.globalNavigator!.currentContext ?? context,
       listen: false,
     );
+    try {
+      final prefs = await SharedPreferences.getInstance();
+
+      appProvider.setLoader(true);
+      if (prefs.containsKey('token')) {
+        final prefToken = prefs.getString('token');
+        if (prefToken != null && prefToken != '') {
+          userProvider.setToken(prefToken);
+          UserService().getUserDetails(appProvider.globalNavigator!.currentContext ?? context);
+          PostService().getFeed(appProvider.globalNavigator!.currentContext ?? context);
+        }
+      }
     if (prefs.containsKey('user')) {
       final prefUser = prefs.getString('user');
       if (prefUser != null && prefUser != '') {
         userProvider.setUser(User.fromJson(jsonDecode(prefUser)));
       }
-    }
-    if (prefs.containsKey('token')) {
-      final prefToken = prefs.getString('token');
-      if (prefToken != null && prefToken != '') {
-        userProvider.setToken(prefToken);
-        UserService().getUserDetails(
-            appProvider.globalNavigator!.currentContext ?? context);
-        PostService()
-              .getFeed(appProvider.globalNavigator!.currentContext ?? context);
       }
-    }
       firebaseService.setupFirebase(userProvider);
-    });
+      appProvider.setLoader(false);
+    } catch (err) {
+      appProvider.setLoader(false);
+      print(">>>>>>>>>>> App prefs init error: $err <<<<<<<<<<<<");
+    }
   }
 
   @override

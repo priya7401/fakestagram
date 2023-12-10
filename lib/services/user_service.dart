@@ -28,14 +28,10 @@ class UserService {
       //if followerId is not null, get call made to fetch follower/following user details,
       //so store data accordingly
       if (followerId == null) {
-        final token = dioResponse.data["token"];
         userProvider.setUser(user);
-        userProvider.setToken(token);
+        appProvider.setPrefsUser(user);
       } else {
-        final user = User.fromJson(dioResponse.data["user"]);
         userProvider.setFollower(user);
-        appProvider.setPrefsUser(dioResponse.data["user"]);
-        appProvider.setPrefsToken(dioResponse.data["token"]);
       }
 
       userProvider.setLoader(false);

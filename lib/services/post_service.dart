@@ -23,7 +23,7 @@ class PostService {
       //58977
       final Response dioResponse = await apiClient.get(
         "/post_management/posts",
-        options: getAuthHeaders(context),
+        options: getAuthHeaders(appProvider.globalNavigator!.currentContext ?? context),
         queryParameters: {"follower_id": followerId},
       );
 

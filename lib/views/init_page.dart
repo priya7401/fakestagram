@@ -9,10 +9,29 @@ class InitPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<UserProvider>(builder: (context, userProvider, child) {
+    return Consumer2<UserProvider, AppProvider>(builder: (context, userProvider, appProvider, child) {
       return Scaffold(
-        body: userProvider.user != null && userProvider.user?.id != null ? const HomePage() : const SignIn(),
+        body: appProvider.isLoading
+            ? AppLoadingScreen()
+            : userProvider.user != null && userProvider.user?.id != null
+                ? const HomePage()
+                : const SignIn(),
       );
     });
+  }
+}
+
+class AppLoadingScreen extends StatelessWidget {
+  const AppLoadingScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Center(
+          child: Image.asset("assets/Rhombus.gif"),
+        ),
+      ),
+    );
   }
 }

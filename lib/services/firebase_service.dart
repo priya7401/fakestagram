@@ -17,8 +17,9 @@ class FirebaseService {
       sound: true,
     );
     token = await messaging.getToken();
-    print('/////////token: $token');
     userProvider.setFcmToken(token);
+
+    _setupFcmNotification();
 
     messaging.onTokenRefresh.listen((fcmToken) {
       token = fcmToken;
@@ -27,14 +28,12 @@ class FirebaseService {
     }).onError((err) {
       debugPrint(">>>>>>>>>> Error getting fcm token <<<<<<<<<<<");
     });
-
-    _setupFcmNotification();
   }
 
   void _setupFcmNotification() async {
     // Get any messages which caused the application to open from
     // a terminated state.
-    RemoteMessage? initialMessage = await messaging.getInitialMessage();
+    RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
 
     if (initialMessage != null) {
       debugPrint(">>>>>>>>>> FCM Notification received in app killed state <<<<<<<<<<<");
