@@ -74,7 +74,8 @@ class _MyAppState extends State<MyApp> {
           userProvider.setUser(User.fromJson(jsonDecode(prefUser)));
         }
       }
-      firebaseService.setupFirebase();
+
+      firebaseService.setupFcmNotification();
       appProvider.setLoader(false);
     } catch (err) {
       appProvider.setLoader(false);

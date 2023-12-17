@@ -1,5 +1,10 @@
 import 'package:fakestagram/main.dart';
+import 'package:fakestagram/services/auth_service.dart';
 import 'package:fakestagram/services/post_service.dart';
+import 'package:fakestagram/services/user_service.dart';
+import 'package:fakestagram/utils/app_constants.dart';
+import 'package:fakestagram/views/home/profile_tab/followers_tab/follow_requests_page.dart';
+import 'package:fakestagram/views/home/profile_tab/post_detail_view.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
@@ -20,8 +25,7 @@ class FirebaseService {
     token = await messaging.getToken();
     userProvider.setFcmToken(token);
     print(">>>>>>>>>> FCM token: $token <<<<<<<<<<<");
-
-    _setupFcmNotification();
+    AuthService().sendDeviceId(appProvider.globalNavigator!.currentContext!);
 
     messaging.onTokenRefresh.listen((fcmToken) {
       token = fcmToken;
@@ -32,7 +36,9 @@ class FirebaseService {
     });
   }
 
-  void _setupFcmNotification() async {
+  void setupFcmNotification() async {
+    print(">>>>>>>>>> setting up FCM notification handlers <<<<<<<<<<<");
+
     // Get any messages which caused the application to open from
     // a terminated state.
     RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
@@ -57,17 +63,33 @@ class FirebaseService {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print(">>>>>>>>>> FCM Notification received in app foreground state <<<<<<<<<<<");
       if (message.notification != null) {
-        handleMessage(message);
+        // handleMessage(message);
       }
     });
   }
 
   void handleMessage(RemoteMessage message) {
+    print('//////////message: ${message.data}');
     try {
       if (message.data['type'] == 'new_post') {
         PostService().getPostDetails(
           appProvider.globalNavigator!.currentContext!,
           message.data["post_id"],
+        );
+      }
+      if (message.data['type'] == 'post_like') {
+        PostService().getPosts(appProvider.globalNavigator!.currentContext!);
+        Navigator.of(appProvider.globalNavigator!.currentContext!).push(
+          MaterialPageRoute(
+              builder: (context) => PostsDetailView(
+                    user: PostDetailView.user.name,
+                  )),
+        );
+      }
+      if (message.data['type'] == 'follow_request') {
+        UserService().followRequestList(appProvider.globalNavigator!.currentContext!);
+        Navigator.of(appProvider.globalNavigator!.currentContext!).push(
+          MaterialPageRoute(builder: (context) => FollowRequestsPage()),
         );
       }
     } catch (err) {

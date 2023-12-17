@@ -19,9 +19,7 @@ class PostsDetailView extends StatelessWidget {
     Size dim = MediaQuery.of(context).size;
     List<Post>? posts;
 
-    return Consumer2<UserProvider, PostsProvider>(
-        builder: (context, userProvider, postProvider, child) {
-
+    return Consumer2<UserProvider, PostsProvider>(builder: (context, userProvider, postProvider, child) {
       switch (user) {
         case "feed":
           posts = postProvider.feed;
@@ -83,8 +81,7 @@ class PostsDetailView extends StatelessWidget {
                               Row(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 5, bottom: 8),
+                                    padding: const EdgeInsets.only(left: 5, bottom: 8),
                                     child: profilePicWidget(
                                       s3Url: user == PostDetailView.user.name
                                           ? userProvider.user?.profilePic?.s3Url
@@ -113,25 +110,14 @@ class PostsDetailView extends StatelessWidget {
                                                       children: [
                                                         Padding(
                                                           padding:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                                  horizontal:
-                                                                      20,
-                                                                  vertical: 20),
+                                                              const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                                                           child: TextButton(
                                                               onPressed: () {
-                                                                PostService()
-                                                                    .deletePost({
-                                                                  "post_id": post
-                                                                      .id
-                                                                      .toString()
-                                                                }, context);
-                                                                Navigator.of(
-                                                                        context)
-                                                                    .pop();
+                                                                PostService().deletePost(
+                                                                    {"post_id": post.id.toString()}, context);
+                                                                Navigator.of(context).pop();
                                                               },
-                                                              child: Text(
-                                                                  'Delete Post')),
+                                                              child: Text('Delete Post')),
                                                         )
                                                       ],
                                                     );
@@ -168,8 +154,7 @@ class PostsDetailView extends StatelessWidget {
                                           );
                                         },
                                         child: Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              5, 10, 5, 0),
+                                          padding: const EdgeInsets.fromLTRB(5, 10, 5, 0),
                                           child: post.userLiked == true
                                               ? Icon(
                                                   Icons.favorite,
@@ -179,8 +164,7 @@ class PostsDetailView extends StatelessWidget {
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 3),
+                                        padding: const EdgeInsets.symmetric(vertical: 3),
                                         child: Text(
                                           post.likes.toString(),
                                           style: TextStyle(
@@ -203,8 +187,7 @@ class PostsDetailView extends StatelessWidget {
                                     child: IconButton(
                                       alignment: Alignment.centerRight,
                                       onPressed: () {},
-                                      icon: const Icon(
-                                          Icons.bookmark_border_outlined),
+                                      icon: const Icon(Icons.bookmark_border_outlined),
                                     ),
                                   ),
                                 ],
@@ -213,36 +196,28 @@ class PostsDetailView extends StatelessWidget {
                                 height: 10,
                               ),
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
+                                padding: const EdgeInsets.symmetric(horizontal: 10),
                                 child: Text(
                                   post.description ?? "N/A",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 15),
+                                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 15),
                                 ),
                               ),
-                              post.commentCount != null &&
-                                      post.commentCount != 0
+                              post.commentCount != null && post.commentCount != 0
                                   ? TextButton(
                                       onPressed: () {},
                                       child: Text(
                                         'View all ${post.commentCount ?? 0} comments',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 15,
-                                            color: Colors.black),
+                                        style:
+                                            TextStyle(fontWeight: FontWeight.w600, fontSize: 15, color: Colors.black),
                                       ),
                                     )
                                   : Container(
                                       height: 15,
                                     ),
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
+                                padding: const EdgeInsets.symmetric(horizontal: 10),
                                 child: Text(
-                                  getCreatedAt(post.createdAt ??
-                                      DateTime.now().toString()),
+                                  getCreatedAt(post.createdAt ?? DateTime.now().toString()),
                                 ),
                               ),
                               SizedBox(
@@ -263,5 +238,4 @@ class PostsDetailView extends StatelessWidget {
           ));
     });
   }
-
 }

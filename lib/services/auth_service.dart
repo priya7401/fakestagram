@@ -42,7 +42,7 @@ class AuthService {
       Navigator.of(appProvider.globalNavigator!.currentContext ?? context).pushReplacement(
         MaterialPageRoute(builder: (context) => HomePage()),
       );
-      sendDeviceId(appProvider.globalNavigator!.currentContext ?? context);
+      firebaseService.setupFirebase();
     } on DioException catch (dioError) {
       userProvider.setLoader(false);
       debugPrint("=========== sign in user error block ==============");
@@ -80,7 +80,7 @@ class AuthService {
       Navigator.of(appProvider.globalNavigator!.currentContext ?? context).pushReplacement(
         MaterialPageRoute(builder: (context) => HomePage()),
       );
-      sendDeviceId(appProvider.globalNavigator!.currentContext ?? context);
+      firebaseService.setupFirebase();
     } on DioException catch (dioError) {
       userProvider.setLoader(false);
       debugPrint("=========== sign up user error block ==============");

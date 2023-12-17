@@ -215,9 +215,9 @@ class PostService {
         options: getAuthHeaders(context),
       );
       final posts = PostList.fromJson(dioResponse.data);
-      final feed = postsProvider.feed ?? [];
-      feed.addAll(posts.posts ?? []);
-      postsProvider.setFeed(feed);
+      // final feed = postsProvider.feed ?? [];
+      // feed.addAll(posts.posts ?? []);
+      postsProvider.setFeed(posts.posts);
 
       postsProvider.setLoader(false);
     } on DioException catch (dioError) {
