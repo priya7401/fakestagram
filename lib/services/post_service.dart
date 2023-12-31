@@ -255,14 +255,14 @@ class PostService {
       postsProvider.setLoader(false);
     } on DioException catch (dioError) {
       postsProvider.setLoader(false);
-      debugPrint("=========== get feed list error block ==============");
+      debugPrint("=========== get post details error block ==============");
       apiSnackbar(
         appProvider.globalNavigator!.currentContext ?? context,
         dioError,
       );
     } catch (err) {
       postsProvider.setLoader(false);
-      debugPrint("=========== get feed list catch block ==============");
+      debugPrint("=========== get post details catch block ==============");
       debugPrint("=========== $err ==============");
     }
   }

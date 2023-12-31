@@ -63,7 +63,7 @@ class FirebaseService {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print(">>>>>>>>>> FCM Notification received in app foreground state <<<<<<<<<<<");
       if (message.notification != null) {
-        // handleMessage(message);
+        handleMessage(message);
       }
     });
   }

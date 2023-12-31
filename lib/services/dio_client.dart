@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:provider/provider.dart';
 
-const baseUrl = "http://192.168.0.197:58703/api/v1";
+// const baseUrl = "http://192.168.0.197:58703/api/v1";
+const baseUrl = "http://fakestagram-api-env.eba-knk874qx.us-east-1.elasticbeanstalk.com/api/v1";
 Dio dioClient = Dio(BaseOptions(
   baseUrl: baseUrl,
   followRedirects: false,
@@ -32,8 +33,7 @@ Dio dioClient = Dio(BaseOptions(
   ]);
 
 dynamic getAuthHeaders(BuildContext context) {
-  final UserProvider userProvider =
-      Provider.of<UserProvider>(context, listen: false);
+  final UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
 
   return Options(headers: {
     "Authorization": "Bearer ${userProvider.token}",

@@ -1,12 +1,13 @@
 {
-    "files.autoSave": "afterDelay",
-    "dart.flutterSdkPath": ".fvm/flutter_sdk",
-    // Remove .fvm files from search
-    "search.exclude": {
-      "**/.fvm": true
-    },
-    // Remove from file watching
-    "files.watcherExclude": {
-      "**/.fvm": true
-    }
+  "files.autoSave": "afterDelay",
+  "dart.flutterSdkPath": ".fvm/flutter_sdk",
+  // Remove .fvm files from search
+  "search.exclude": {
+    "**/.fvm": true
+  },
+  // Remove from file watching
+  "files.watcherExclude": {
+    "**/.fvm": true
+  },
+  "cmake.sourceDirectory": "/Users/splakshmipriya/Desktop/node - mongo - learning/instagram-clone/fakestagram/windows"
 }
