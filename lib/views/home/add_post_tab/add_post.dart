@@ -26,8 +26,9 @@ class _AddPostState extends State<AddPost> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<AppProvider, PostsProvider>(
-        builder: (context, appProvider, postsProvider, child) {
+    final Size dim = MediaQuery.of(context).size;
+
+    return Consumer2<AppProvider, PostsProvider>(builder: (context, appProvider, postsProvider, child) {
       return Scaffold(
         appBar: AppBar(
           title: Text('New Post'),
@@ -61,37 +62,33 @@ class _AddPostState extends State<AddPost> {
                               builder: (context) {
                                 return Wrap(
                                   children: [
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 15, vertical: 10),
+                                    Container(
+                                      width: dim.width,
+                                      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                                       child: Column(
                                         children: [
                                           TextButton(
                                               onPressed: () async {
-                                                final file = await pickFile(
-                                                    ImageSource.gallery);
+                                                final file = await pickFile(ImageSource.gallery);
                                                 setState(() {
                                                   image = file;
                                                 });
                                                 if (context.mounted) {
-                                                Navigator.of(context).pop();
+                                                  Navigator.of(context).pop();
                                                 }
                                               },
-                                              child:
-                                                  Text('Upload from gallery')),
+                                              child: Text('Upload from gallery')),
                                           TextButton(
                                               onPressed: () async {
-                                                final file = await pickFile(
-                                                    ImageSource.camera);
+                                                final file = await pickFile(ImageSource.camera);
                                                 setState(() {
                                                   image = file;
                                                 });
                                                 if (context.mounted) {
-                                                Navigator.of(context).pop();
+                                                  Navigator.of(context).pop();
                                                 }
                                               },
-                                              child:
-                                                  Text('Upload from camera')),
+                                              child: Text('Upload from camera')),
                                         ],
                                       ),
                                     ),
@@ -131,10 +128,7 @@ class _AddPostState extends State<AddPost> {
                       onTap: () async {
                         if (image != null) {
                           PostService().getPresingedUrl(
-                            {
-                              "file_name": image?.path.split('/').last,
-                              "file_type": image?.path.split('.').last
-                            },
+                            {"file_name": image?.path.split('/').last, "file_type": image?.path.split('.').last},
                             image!,
                             context,
                             callback: (String s3Key) async {
@@ -143,8 +137,7 @@ class _AddPostState extends State<AddPost> {
                                   "s3_key": s3Key,
                                   "description": description.text,
                                 },
-                                appProvider.globalNavigator!.currentContext ??
-                                    context,
+                                appProvider.globalNavigator!.currentContext ?? context,
                               );
                             },
                           );
